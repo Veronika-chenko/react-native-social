@@ -11,6 +11,7 @@ import {
     Platform,
     KeyboardAvoidingView,
     Button,
+    Dimensions,
 } from 'react-native';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
@@ -28,6 +29,7 @@ export const LoginScreen = ({navigation}) => {
     // console.log("navigation", navigation)
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
     const [userData, setUserData] = useState(initialState);
+    const [showPassword, setShowPassword] = useState(false);
     const [fontsLoaded] = useFonts({
         'Roboto-Medium': require('../../assets/fonts/Roboto/Roboto-Medium.ttf'),
         'Roboto-Regular': require('../../assets/fonts/Roboto/Roboto-Regular.ttf'),
@@ -50,16 +52,20 @@ export const LoginScreen = ({navigation}) => {
         setUserData(initialState);
     }
 
+    const handleSubmit = () => {
+        console.log("userData(Log): ", userData);
+        setUserData(initialState);
+        navigation.navigate("Home")
+    }
+
 
     return (
         <TouchableWithoutFeedback onPress={keyboardHide}>
             <View style={styles.container}>
                 <ImageBackground source={mountainsImage} style={styles.bgImage}>
-                <View style={styles.innerBox} onLayout={onLayoutRootView}>
+                <View style={{...styles.innerBox, marginTop: isShowKeyboard ? 255 : 280}} onLayout={onLayoutRootView}>
                     <KeyboardAvoidingView 
                         behavior={Platform.OS == "ios" ? "padding" : "height"}>
-
-                    <View style={{...styles.form, marginBottom: isShowKeyboard ? -95 : 144 }}>
                         <Text style={styles.title}>Увійти</Text>
 
                         <TextInput
@@ -80,9 +86,12 @@ export const LoginScreen = ({navigation}) => {
                                 value={userData.password}
                                 onChangeText={(value) => setUserData(prev => ({...prev, password: value}))}
                             />
-                            <TouchableOpacity style={styles.showPasswordBtn}>
+                            <TouchableOpacity 
+                                style={styles.showPasswordBtn}
+                                activeOpacity={0.7}
+                                onPress={() => setShowPassword(!showPassword)}>
                                 <Text style={styles.showPasswordText}>
-                                    Показати
+                                    {showPassword ? "Показати" : "Cкрити"}
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -90,15 +99,14 @@ export const LoginScreen = ({navigation}) => {
                     <TouchableOpacity 
                         style={styles.mainButton}
                         activeOpacity={0.7}
-                        onPress={keyboardHide}
+                        onPress={handleSubmit}
                     >
                         <Text style={styles.buttonText}>Увійти</Text>
                     </TouchableOpacity>
                     <Text style={styles.footerText}>Не маєте акаунта?
                         <Text onPress={() => navigation.navigate('Register')}> Зареєструватися</Text>
                     </Text>
-                    </View> 
-                    </KeyboardAvoidingView>
+                     </KeyboardAvoidingView>
                     </View>
                 </ImageBackground>
             </View>
@@ -112,18 +120,22 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
     },
     bgImage: {
-        flex: 1,
-        resizeMode: 'cover',
-        justifyContent: 'flex-end',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
     },
     innerBox: {
+        flex: 1,
+        // 
         backgroundColor: '#fff',
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
-    },
-    form: {
+        //
         paddingTop: 32,
-        marginHorizontal: 16,
+        // marginHorizontal: 16,
+        paddingHorizontal: 16,
     },
     title: {
         marginBottom: 32,

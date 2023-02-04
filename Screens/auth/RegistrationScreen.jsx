@@ -12,6 +12,7 @@ import {
     KeyboardAvoidingView,
     Image,
     Button,
+    Dimensions,
 } from 'react-native';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
@@ -33,6 +34,7 @@ export const RegistrationScreen = ({navigation}) => {
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
     const [userData, setUserData] = useState(initialState);
     const [isPhoto, setIsPhoto] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const [fontsLoaded] = useFonts({
         'Roboto-Medium': require('../../assets/fonts/Roboto/Roboto-Medium.ttf'),
         'Roboto-Regular': require('../../assets/fonts/Roboto/Roboto-Regular.ttf'),
@@ -48,7 +50,7 @@ export const RegistrationScreen = ({navigation}) => {
         return null;
     }
 
-    // console.log("isShowKeyboard: ", isShowKeyboard)
+    console.log("isShowKeyboard: ", isShowKeyboard)
     const keyboardHide = () => {
         setIsShowKeyboard(false);
         Keyboard.dismiss();
@@ -56,15 +58,21 @@ export const RegistrationScreen = ({navigation}) => {
         setUserData(initialState);
     }
 
+    const handleSubmit = () => {
+        console.log("userData(Reg): ", userData);
+        setUserData(initialState);
+        navigation.navigate("Home")
+    }
+
     return (
         <TouchableWithoutFeedback onPress={keyboardHide}>
             <View style={styles.container}>
                 <ImageBackground source={mountainsImage} style={styles.bgImage}>
-                <View style={styles.innerBox} onLayout={onLayoutRootView}>
+                <View style={{...styles.innerBox, marginTop: isShowKeyboard ? 128 : 220}} onLayout={onLayoutRootView}>
                     <KeyboardAvoidingView 
-                        behavior={Platform.OS == "ios" ? "padding" : "height"} >                    
-                        <View style={{...styles.form, marginBottom: isShowKeyboard ? -100 : 78}}>
-                            <View style={{...styles.photoWrap }}>
+                        behavior={Platform.OS == "ios" ? "padding" : "height"} >
+                        <View style={{...styles.form, paddingBottom: 78}}>
+                            <View style={styles.photoWrap}>
                                 {isPhoto ? (
                                     <>
                                         <Image source={userPhoto} />
@@ -106,7 +114,7 @@ export const RegistrationScreen = ({navigation}) => {
                             />
                             <View style={{ position: "relative" }}>
                                 <TextInput
-                                    secureTextEntry={true}
+                                    secureTextEntry={showPassword}
                                     style={styles.input}
                                     placeholder='Пароль'
                                     placeholderTextColor={'#BDBDBD'}
@@ -114,9 +122,12 @@ export const RegistrationScreen = ({navigation}) => {
                                     value={userData.password}
                                     onChangeText={(value) => setUserData(prev => ({...prev, password: value}))}
                                 />
-                                <TouchableOpacity style={styles.showPasswordBtn}>
+                                <TouchableOpacity 
+                                    style={styles.showPasswordBtn}
+                                    activeOpacity={0.7}
+                                    onPress={() => setShowPassword(!showPassword)}>
                                     <Text style={styles.showPasswordText}>
-                                        Показати
+                                        {showPassword ? "Показати" : "Cкрити"}
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -124,7 +135,7 @@ export const RegistrationScreen = ({navigation}) => {
                         <TouchableOpacity 
                             style={styles.mainButton}
                             activeOpacity={0.7}
-                            onPress={keyboardHide}
+                            onPress={handleSubmit}
                         >
                             <Text style={styles.buttonText}>Зареєструватися</Text>
                         </TouchableOpacity>
@@ -147,23 +158,31 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
     },
     bgImage: {
-        flex: 1,
-        resizeMode: 'cover',
         justifyContent: 'flex-end',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
     },
     innerBox: {
+        flex: 1,
         position: 'relative',
         backgroundColor: '#fff',
+
+        paddingTop: 92,
+        paddingHorizontal: 16,
+
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
     },
     form: {
-        paddingTop: 92,
-        marginHorizontal: 16,
+        // paddingTop: 92,
+        // marginHorizontal: 16,
     },
     photoWrap: {
         position: 'absolute',
-        top: -60,
+        top: -152,
         left: '50%',
         transform: [{ translateX: -50 }],
         width: 120,
@@ -210,6 +229,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 16,
         right: 16,
+        
     },
     showPasswordText: {
         color: '#1B4371',
