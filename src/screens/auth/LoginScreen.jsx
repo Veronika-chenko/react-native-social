@@ -3,20 +3,19 @@ import {
     View,
     ImageBackground,
     StyleSheet,
-    TextInput,
     TouchableOpacity,
     Text,
     TouchableWithoutFeedback,
     Keyboard,
     Platform,
     KeyboardAvoidingView,
-    Button,
     Dimensions,
 } from 'react-native';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 
-import mountainsImage from '../../assets/images/mountains-bg.jpg';
+import mountainsImage from '../../../assets/images/mountains-bg.jpg';
+import { FormInput } from '../../components/Input';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -26,20 +25,19 @@ const initialState = {
 };
 
 export const LoginScreen = ({navigation}) => {
-    // console.log("navigation", navigation)
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
     const [userData, setUserData] = useState(initialState);
-    const [showPassword, setShowPassword] = useState(false);
+    const [hidePassword, setHidePassword] = useState(true);
     const [fontsLoaded] = useFonts({
-        'Roboto-Medium': require('../../assets/fonts/Roboto/Roboto-Medium.ttf'),
-        'Roboto-Regular': require('../../assets/fonts/Roboto/Roboto-Regular.ttf'),
+        'Roboto-Medium': require('../../../assets/fonts/Roboto/Roboto-Medium.ttf'),
+        'Roboto-Regular': require('../../../assets/fonts/Roboto/Roboto-Regular.ttf'),
     });
 
     const onLayoutRootView = useCallback(async () => {
         if (fontsLoaded) {
             await SplashScreen.hideAsync();
         }
-    }, [fontsLoaded]);
+    }, [fontsLoaded])
 
     if (!fontsLoaded) {
         return null;
@@ -48,16 +46,13 @@ export const LoginScreen = ({navigation}) => {
     const keyboardHide = () => {
         setIsShowKeyboard(false);
         Keyboard.dismiss();
-        // console.log(userData)
-        setUserData(initialState);
     }
 
     const handleSubmit = () => {
-        console.log("userData(Log): ", userData);
+        // console.log("userData(Log): ", userData);
         setUserData(initialState);
         navigation.navigate("Home")
     }
-
 
     return (
         <TouchableWithoutFeedback onPress={keyboardHide}>
@@ -68,30 +63,26 @@ export const LoginScreen = ({navigation}) => {
                         behavior={Platform.OS == "ios" ? "padding" : "height"}>
                         <Text style={styles.title}>Увійти</Text>
 
-                        <TextInput
-                            style={styles.input}
+                        <FormInput 
                             placeholder='Електронна пошта'
-                            placeholderTextColor={'#BDBDBD'}
-                            onFocus={() => setIsShowKeyboard(true)}
                             value={userData.email}
                             onChangeText={(value) => setUserData(prev => ({...prev, email: value}))}
-                        />
+                            onFocus={() => setIsShowKeyboard(true)}
+                            />
                         <View style={{ position: "relative" }}>
-                            <TextInput
-                                secureTextEntry={true}
-                                style={styles.input}
+                            <FormInput 
                                 placeholder='Пароль'
-                                placeholderTextColor={'#BDBDBD'}
-                                onFocus={() => setIsShowKeyboard(true)}
                                 value={userData.password}
                                 onChangeText={(value) => setUserData(prev => ({...prev, password: value}))}
-                            />
+                                onFocus={() => setIsShowKeyboard(true)}
+                                secureTextEntry={hidePassword}
+                                />
                             <TouchableOpacity 
                                 style={styles.showPasswordBtn}
                                 activeOpacity={0.7}
-                                onPress={() => setShowPassword(!showPassword)}>
+                                onPress={() => setHidePassword(!hidePassword)}>
                                 <Text style={styles.showPasswordText}>
-                                    {showPassword ? "Показати" : "Cкрити"}
+                                    {hidePassword ? "Показати" : "Cкрити"}
                                 </Text>
                             </TouchableOpacity>
                         </View>

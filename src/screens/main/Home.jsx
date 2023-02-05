@@ -1,8 +1,8 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // main screens
-import { PostsScreen } from '../../Screens/main/PostsScreen';
-import { CreatePostsScreen } from '../../Screens/main/CreatePostsScreen';
-import { ProfileScreen } from '../../Screens/main/ProfileScreen';
+import { PostsScreen } from '../main/PostsScreen';
+import { CreatePostsScreen } from '../main/CreatePostsScreen';
+import { ProfileScreen } from '../main/ProfileScreen';
 // 
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 //  icons

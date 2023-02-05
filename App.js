@@ -1,14 +1,14 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from "@react-navigation/stack";
 // auth screens
-import { RegistrationScreen } from './Screens/auth/RegistrationScreen';
-import { LoginScreen } from './Screens/auth/LoginScreen';
+import { RegistrationScreen } from './src/screens/auth/RegistrationScreen';
+import { LoginScreen } from './src/screens/auth/LoginScreen';
 // main screens
-import { Home } from './Screens/main/Home';
+import { Home } from './src/screens/main/Home';
 
 const AuthStack = createStackNavigator();
 
-import { Text } from 'react-native';
+// import { Text } from 'react-native';
 
 export default function App() {
   return (

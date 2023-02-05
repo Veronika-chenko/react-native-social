@@ -3,7 +3,6 @@ import {
     View,
     ImageBackground,
     StyleSheet,
-    TextInput,
     TouchableOpacity,
     Text,
     TouchableWithoutFeedback,
@@ -11,16 +10,16 @@ import {
     Platform,
     KeyboardAvoidingView,
     Image,
-    Button,
     Dimensions,
 } from 'react-native';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 
-import mountainsImage from '../../assets/images/mountains-bg.jpg';
-import userPhoto from '../../assets/images/user-photo.png'; 
-import union from '../../assets/images/union.png';
-import cross from '../../assets/images/cross.png';
+import mountainsImage from '../../../assets/images/mountains-bg.jpg';
+import userPhoto from '../../../assets/images/user-photo.png'; 
+import union from '../../../assets/images/union.png';
+import cross from '../../../assets/images/cross.png';
+import { FormInput } from '../../components/Input';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -33,33 +32,31 @@ const initialState = {
 export const RegistrationScreen = ({navigation}) => {
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
     const [userData, setUserData] = useState(initialState);
+    const [hidePassword, setHidePassword] = useState(true);
     const [isPhoto, setIsPhoto] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
     const [fontsLoaded] = useFonts({
-        'Roboto-Medium': require('../../assets/fonts/Roboto/Roboto-Medium.ttf'),
-        'Roboto-Regular': require('../../assets/fonts/Roboto/Roboto-Regular.ttf'),
+        'Roboto-Medium': require('../../../assets/fonts/Roboto/Roboto-Medium.ttf'),
+        'Roboto-Regular': require('../../../assets/fonts/Roboto/Roboto-Regular.ttf'),
     });
 
     const onLayoutRootView = useCallback(async () => {
         if (fontsLoaded) {
             await SplashScreen.hideAsync();
         }
-    }, [fontsLoaded]);
+    }, [fontsLoaded])
 
     if (!fontsLoaded) {
         return null;
     }
 
-    console.log("isShowKeyboard: ", isShowKeyboard)
+    // console.log("isShowKeyboard: ", isShowKeyboard)
     const keyboardHide = () => {
         setIsShowKeyboard(false);
         Keyboard.dismiss();
-        // console.log(userData)
-        setUserData(initialState);
     }
 
     const handleSubmit = () => {
-        console.log("userData(Reg): ", userData);
+        // console.log("userData(Reg): ", userData);
         setUserData(initialState);
         navigation.navigate("Home")
     }
@@ -96,38 +93,32 @@ export const RegistrationScreen = ({navigation}) => {
                             </View>
 
                             <Text style={styles.title}>Реєстрація</Text>
-                            <TextInput
-                                style={styles.input}
+                            <FormInput 
                                 placeholder='Логін'
-                                placeholderTextColor={'#BDBDBD'}
-                                onFocus={() => setIsShowKeyboard(true)}
                                 value={userData.login}
                                 onChangeText={(value) => setUserData(prev => ({...prev, login: value}))}
-                            />
-                            <TextInput
-                                style={styles.input}
-                                placeholder='Електронна пошта'
-                                placeholderTextColor={'#BDBDBD'}
                                 onFocus={() => setIsShowKeyboard(true)}
+                                />
+                            <FormInput 
+                                placeholder='Електронна пошта'
                                 value={userData.email}
                                 onChangeText={(value) => setUserData(prev => ({...prev, email: value}))}
-                            />
+                                onFocus={() => setIsShowKeyboard(true)}
+                                />
                             <View style={{ position: "relative" }}>
-                                <TextInput
-                                    secureTextEntry={showPassword}
-                                    style={styles.input}
+                                <FormInput 
                                     placeholder='Пароль'
-                                    placeholderTextColor={'#BDBDBD'}
-                                    onFocus={() => setIsShowKeyboard(true)}
                                     value={userData.password}
                                     onChangeText={(value) => setUserData(prev => ({...prev, password: value}))}
-                                />
+                                    onFocus={() => setIsShowKeyboard(true)}
+                                    secureTextEntry={hidePassword}
+                                    />
                                 <TouchableOpacity 
                                     style={styles.showPasswordBtn}
                                     activeOpacity={0.7}
-                                    onPress={() => setShowPassword(!showPassword)}>
+                                    onPress={() => setHidePassword(!hidePassword)}>
                                     <Text style={styles.showPasswordText}>
-                                        {showPassword ? "Показати" : "Cкрити"}
+                                        {hidePassword ? "Показати" : "Cкрити"}
                                     </Text>
                                 </TouchableOpacity>
                             </View>

@@ -4,18 +4,18 @@ import { Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 
-import mountainsImage from '../../assets/images/mountains-bg.jpg';
-import userPhoto from '../../assets/images/user-photo.png'; 
-import union from '../../assets/images/union.png';
-import cross from '../../assets/images/cross.png';
+import mountainsImage from '../../../assets/images/mountains-bg.jpg';
+import userPhoto from '../../../assets/images/user-photo.png'; 
+import union from '../../../assets/images/union.png';
+import cross from '../../../assets/images/cross.png';
 
 SplashScreen.preventAutoHideAsync();
 
 export const ProfileScreen = () => {
     const [isPhoto, setIsPhoto] = useState(false);
     const [fontsLoaded] = useFonts({
-        'Roboto-Medium': require('../../assets/fonts/Roboto/Roboto-Medium.ttf'),
-        'Roboto-Regular': require('../../assets/fonts/Roboto/Roboto-Regular.ttf'),
+        'Roboto-Medium': require('../../../assets/fonts/Roboto/Roboto-Medium.ttf'),
+        'Roboto-Regular': require('../../../assets/fonts/Roboto/Roboto-Regular.ttf'),
     });
 
     const onLayoutRootView = useCallback(async () => {
@@ -26,7 +26,7 @@ export const ProfileScreen = () => {
 
     if (!fontsLoaded) {
         return null;
-    }
+    };
 
     return( 
         // <Text>ProfileScreen</Text>

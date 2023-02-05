@@ -3,16 +3,16 @@ import { Image, StyleSheet, Text, View } from "react-native";
 
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import userPhoto from '../../assets/images/user-photo.png'; 
-import postPhoto from '../../assets/images/post.jpg'; 
+import userPhoto from '../../../assets/images/user-photo.png'; 
+// import postPhoto from '../../../assets/images/post.jpg'; 
 
 SplashScreen.preventAutoHideAsync();
 
 export const PostsScreen = () => {
     const [fontsLoaded] = useFonts({
-        'Roboto-Bold': require('../../assets/fonts/Roboto/Roboto-Bold.ttf'),
-        'Roboto-Medium': require('../../assets/fonts/Roboto/Roboto-Medium.ttf'),
-        'Roboto-Regular': require('../../assets/fonts/Roboto/Roboto-Regular.ttf'),
+        'Roboto-Bold': require('../../../assets/fonts/Roboto/Roboto-Bold.ttf'),
+        'Roboto-Medium': require('../../../assets/fonts/Roboto/Roboto-Medium.ttf'),
+        'Roboto-Regular': require('../../../assets/fonts/Roboto/Roboto-Regular.ttf'),
     });
 
     const onLayoutRootView = useCallback(async () => {
