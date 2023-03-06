@@ -1,12 +1,12 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // main screens
 import { PostsScreen } from '../main/PostsScreen';
-import { CreatePostsScreen } from '../main/CreatePostsScreen';
+import { CreatePostsScreen } from '../main/CreatePostsScreen2';
 import { ProfileScreen } from '../main/ProfileScreen';
 // 
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 //  icons
-import { SimpleLineIcons, Ionicons, Feather } from '@expo/vector-icons';
+import { SimpleLineIcons, Ionicons, Feather, AntDesign } from '@expo/vector-icons';
 
 const BottomMenu = createBottomTabNavigator();
 
@@ -22,7 +22,7 @@ export const Home = ({ navigation }) => {
         >
             {/* 1 */}
             <BottomMenu.Screen 
-                name="Публікації" 
+                name="Posts" 
                 component={PostsScreen}
                 
                 options={{
@@ -53,6 +53,9 @@ export const Home = ({ navigation }) => {
                 name='Create Post' 
                 component={CreatePostsScreen}
                 options={{
+                    tabBarStyle: {
+                        display: "none"
+                    },
                     title: "Створити публкацію",
                     headerTintColor: "#212121",
                     headerTitleAlign: 'center',
@@ -65,6 +68,14 @@ export const Home = ({ navigation }) => {
                         size={24} 
                         color={focused ? "#fff" : "rgba(33, 33, 33, 0.8)"} />
                     ),
+                    headerLeft: () => (
+                        <TouchableOpacity
+                          activeOpacity={0.7}
+                          style={{ marginLeft: 16 }}
+                          onPress={() => navigation.navigate("Posts")}
+                        >
+                            <AntDesign name="arrowleft" size={24} color="rgba(33, 33, 33, 0.8)" />
+                        </TouchableOpacity>)
                 }}
                 />
             {/* 3 */}

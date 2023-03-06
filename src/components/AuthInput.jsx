@@ -2,7 +2,7 @@ import { useState } from "react";
 import { StyleSheet, TextInput } from "react-native";
 import PropTypes from 'prop-types';
 
-export const FormInput = ({
+export const AuthInput = ({
     placeholder,
     value,
     onChangeText,
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     },
 })
 
-FormInput.propTypes = {
+AuthInput.propTypes = {
     placeholder: PropTypes.string.isRequired,
     value: PropTypes.string.isRequired,
     onChangeText: PropTypes.func.isRequired,

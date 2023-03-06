@@ -19,7 +19,7 @@ import mountainsImage from '../../../assets/images/mountains-bg.jpg';
 import userPhoto from '../../../assets/images/user-photo.png'; 
 import union from '../../../assets/images/union.png';
 import cross from '../../../assets/images/cross.png';
-import { FormInput } from '../../components/Input';
+import { AuthInput } from '../../components/AuthInput';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -62,12 +62,15 @@ export const RegistrationScreen = ({navigation}) => {
     }
 
     return (
+        <KeyboardAvoidingView 
+            behavior={Platform.OS == "ios" ? "padding" : "height"} 
+            style={{flex: 1}}>
         <TouchableWithoutFeedback onPress={keyboardHide}>
             <View style={styles.container}>
                 <ImageBackground source={mountainsImage} style={styles.bgImage}>
                 <View style={{...styles.innerBox, marginTop: isShowKeyboard ? 128 : 220}} onLayout={onLayoutRootView}>
-                    <KeyboardAvoidingView 
-                        behavior={Platform.OS == "ios" ? "padding" : "height"} >
+                    {/* <KeyboardAvoidingView 
+                        behavior={Platform.OS == "ios" ? "padding" : "height"} > */}
                         <View style={{...styles.form, paddingBottom: 78}}>
                             <View style={styles.photoWrap}>
                                 {isPhoto ? (
@@ -93,20 +96,20 @@ export const RegistrationScreen = ({navigation}) => {
                             </View>
 
                             <Text style={styles.title}>Реєстрація</Text>
-                            <FormInput 
+                            <AuthInput 
                                 placeholder='Логін'
                                 value={userData.login}
                                 onChangeText={(value) => setUserData(prev => ({...prev, login: value}))}
                                 onFocus={() => setIsShowKeyboard(true)}
                                 />
-                            <FormInput 
+                            <AuthInput 
                                 placeholder='Електронна пошта'
                                 value={userData.email}
                                 onChangeText={(value) => setUserData(prev => ({...prev, email: value}))}
                                 onFocus={() => setIsShowKeyboard(true)}
                                 />
                             <View style={{ position: "relative" }}>
-                                <FormInput 
+                                <AuthInput 
                                     placeholder='Пароль'
                                     value={userData.password}
                                     onChangeText={(value) => setUserData(prev => ({...prev, password: value}))}
@@ -135,11 +138,12 @@ export const RegistrationScreen = ({navigation}) => {
                             <Text style={styles.footerText} onPress={() => navigation.navigate('Login')}> Увійти</Text>
                         </Text>
                         </View>
-                    </KeyboardAvoidingView>
+                    {/* </KeyboardAvoidingView> */}
                 </View>
                 </ImageBackground>
             </View>
         </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
     )
 }
 
