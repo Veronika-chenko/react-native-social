@@ -54,19 +54,19 @@ export const CreatePostsScreen = () => {
         setPhoto(newPhoto);
     };
 
-    if(photo) {
-        let sharePic = () => {
+    // if(photo) {
+    //     let sharePic = () => {
 
-        }
-        let savePhoto = () => {
+    //     }
+    //     let savePhoto = () => {
 
-        }
-        return (
-            <View style={styles.photoWrap}>
-                <Image style={styles.preview} source={{ uri: 'data:image/jpg;base64,' + photo.base64 }}/>
-            </View>
-        )
-    }
+    //     }
+    //     return (
+    //         <View style={styles.photoWrap}>
+    //             <Image style={styles.preview} source={{ uri: 'data:image/jpg;base64,' + photo.base64 }}/>
+    //         </View>
+    //     )
+    // }
     const keyboardHide = () => {
         setIsShowKeyboard(false);
         Keyboard.dismiss();
@@ -88,13 +88,16 @@ export const CreatePostsScreen = () => {
                         // type={type}
                         >
                         <View style={styles.photoWrap}>
-                            <TouchableOpacity 
+                            {!photo && <TouchableOpacity 
                                 style={styles.photoButton}
                                 activeOpacity={0.7}
                                 onPress={takePic}
                                 >
                                 <FontAwesome5 name="camera" size={24} color="#BDBDBD" />
-                            </TouchableOpacity>
+                            </TouchableOpacity>}
+                            {photo && 
+                                <Image style={styles.preview} source={{ uri: 'data:image/jpg;base64,' + photo.base64 }}/>
+                            }
                         </View>
                     </Camera>
                     <Text style={styles.helpText}>Завантажте фото</Text>
