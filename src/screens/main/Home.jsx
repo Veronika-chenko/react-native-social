@@ -1,12 +1,12 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // main screens
-import { PostsScreen } from '../main/PostsScreen';
-import { CreatePostsScreen } from '../main/CreatePostsScreen';
-import { ProfileScreen } from '../main/ProfileScreen';
+import { PostsScreen } from './PostsScreen';
+import { CreatePostsScreen } from './CreatePostsScreen';
+import { ProfileScreen } from './ProfileScreen';
 // 
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 //  icons
-import { SimpleLineIcons, Ionicons, Feather } from '@expo/vector-icons';
+import { SimpleLineIcons, Ionicons, Feather, AntDesign } from '@expo/vector-icons';
 
 const BottomMenu = createBottomTabNavigator();
 
@@ -22,37 +22,26 @@ export const Home = ({ navigation }) => {
         >
             {/* 1 */}
             <BottomMenu.Screen 
-                name="Публікації" 
+                name="Posts" 
                 component={PostsScreen}
-                
                 options={{
-                    title: "Публікації",
-                    headerTintColor: "#212121",
-                    headerTitleAlign: 'center',
-                    headerStyle: {
-                        borderBottomColor: "rgba(0, 0, 0, 0.3)",
-                        borderBottomWidth: 0.5,
-                    },
+                    headerShown: false,
                     tabBarIcon:({focused}) => (
                         <SimpleLineIcons 
                             name="grid" 
                             size={24} 
                             color={focused ? "#fff" : "rgba(33, 33, 33, 0.8)"} />
                     ),
-                    headerRight: () => (
-                        <TouchableOpacity
-                          activeOpacity={0.7}
-                          style={{ marginRight: 10 }}
-                          onPress={() => navigation.navigate("Login")}
-                        >
-                          <Ionicons name="exit-outline" size={28} color="#BDBDBD" />
-                        </TouchableOpacity>)
-                }} />
+                }} 
+                />
             {/* 2 */}
             <BottomMenu.Screen
                 name='Create Post' 
                 component={CreatePostsScreen}
                 options={{
+                    tabBarStyle: {
+                        display: "none"
+                    },
                     title: "Створити публкацію",
                     headerTintColor: "#212121",
                     headerTitleAlign: 'center',
@@ -65,6 +54,14 @@ export const Home = ({ navigation }) => {
                         size={24} 
                         color={focused ? "#fff" : "rgba(33, 33, 33, 0.8)"} />
                     ),
+                    headerLeft: () => (
+                        <TouchableOpacity
+                          activeOpacity={0.7}
+                          style={{ marginLeft: 16 }}
+                          onPress={() => navigation.navigate("Posts")}
+                        >
+                            <AntDesign name="arrowleft" size={24} color="rgba(33, 33, 33, 0.8)" />
+                        </TouchableOpacity>)
                 }}
                 />
             {/* 3 */}

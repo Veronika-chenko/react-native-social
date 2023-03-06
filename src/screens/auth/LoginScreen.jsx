@@ -15,7 +15,7 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 
 import mountainsImage from '../../../assets/images/mountains-bg.jpg';
-import { FormInput } from '../../components/Input';
+import { AuthInput } from '../../components/AuthInput';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -55,22 +55,25 @@ export const LoginScreen = ({navigation}) => {
     }
 
     return (
+        <KeyboardAvoidingView 
+            behavior={Platform.OS == "ios" ? "padding" : "height"} 
+            style={{flex: 1}}>
         <TouchableWithoutFeedback onPress={keyboardHide}>
             <View style={styles.container}>
                 <ImageBackground source={mountainsImage} style={styles.bgImage}>
                 <View style={{...styles.innerBox, marginTop: isShowKeyboard ? 255 : 280}} onLayout={onLayoutRootView}>
-                    <KeyboardAvoidingView 
-                        behavior={Platform.OS == "ios" ? "padding" : "height"}>
+                    {/* <KeyboardAvoidingView 
+                        behavior={Platform.OS == "ios" ? "padding" : "height"}> */}
                         <Text style={styles.title}>Увійти</Text>
 
-                        <FormInput 
+                        <AuthInput 
                             placeholder='Електронна пошта'
                             value={userData.email}
                             onChangeText={(value) => setUserData(prev => ({...prev, email: value}))}
                             onFocus={() => setIsShowKeyboard(true)}
                             />
                         <View style={{ position: "relative" }}>
-                            <FormInput 
+                            <AuthInput 
                                 placeholder='Пароль'
                                 value={userData.password}
                                 onChangeText={(value) => setUserData(prev => ({...prev, password: value}))}
@@ -97,11 +100,12 @@ export const LoginScreen = ({navigation}) => {
                     <Text style={styles.footerText}>Не маєте акаунта?
                         <Text onPress={() => navigation.navigate('Register')}> Зареєструватися</Text>
                     </Text>
-                     </KeyboardAvoidingView>
+                     {/* </KeyboardAvoidingView> */}
                     </View>
                 </ImageBackground>
             </View>
         </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
     )
 }
 
