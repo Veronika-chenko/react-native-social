@@ -54,12 +54,12 @@ export const CreatePostsScreen = ({ navigation }) => {
         console.log("Permission to access location was denied");
       }
 
-      let location = await Location.getCurrentPositionAsync({});
-      const coords = {
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      };
-      setLocation(coords);
+      // let location = await Location.getCurrentPositionAsync({});
+      // const coords = {
+      //   latitude: location.coords.latitude,
+      //   longitude: location.coords.longitude,
+      // };
+      // setLocation(coords);
     })();
   }, []);
 
@@ -73,6 +73,16 @@ export const CreatePostsScreen = ({ navigation }) => {
     );
   }
 
+  const getUserLocation = async () => {
+    let location = await Location.getCurrentPositionAsync({});
+    const coords = {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+    };
+    return coords;
+    // setLocation(coords);
+  };
+
   let takePic = async () => {
     let options = {
       quality: 1,
@@ -85,15 +95,20 @@ export const CreatePostsScreen = ({ navigation }) => {
   };
 
   // submitForm
-  const publicPhoto = () => {
+  const handleSubmit = async () => {
+    const location = await getUserLocation();
     // const data = { ...postData, location, photo };
-    // const data = { ...postData, location, photo: photo.uri };
+    const data = {
+      ...postData,
+      location,
+      photo: photo,
+    };
 
     // console.log("postData:", data);
 
     // navigation.navigate('Posts', {photo})
-    navigation.navigate("DefaultPosts", { photo });
-    // navigation.navigate("DefaultPosts", { data });
+    // navigation.navigate("DefaultPosts", { photo });
+    navigation.navigate("DefaultPosts", data);
   };
 
   // if(photo) {
@@ -174,7 +189,7 @@ export const CreatePostsScreen = ({ navigation }) => {
             <TouchableOpacity
               style={styles.mainButton}
               activeOpacity={0.7}
-              onPress={publicPhoto}
+              onPress={handleSubmit}
             >
               <Text style={styles.buttonText}>Опублікувати</Text>
             </TouchableOpacity>
