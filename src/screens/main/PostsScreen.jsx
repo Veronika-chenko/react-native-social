@@ -6,13 +6,14 @@ import { CommentsScreen, DefaultPostsScreen, MapScreen } from "../nested";
 //
 const NestedScreen = createStackNavigator();
 
-export const PostsScreen = () => {
+export const PostsScreen = ({ navigation }) => {
   return (
     // <NestedScreen.Navigator screenOptions={{ headerShown: false }}>
     <NestedScreen.Navigator>
       {/* 1 */}
       <NestedScreen.Screen
         name="DefaultPosts"
+        // component={DefaultPostsScreen}
         component={DefaultPostsScreen}
         options={{
           title: "Публікації",
@@ -31,6 +32,7 @@ export const PostsScreen = () => {
               <Ionicons name="exit-outline" size={28} color="#BDBDBD" />
             </TouchableOpacity>
           ),
+          headerLeft: () => null,
         }}
       />
       {/* 2 */}

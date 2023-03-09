@@ -1,5 +1,6 @@
 import { StyleSheet, View } from "react-native";
-import MapView from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
+import PropTypes from "prop-types";
 
 export const MapScreen = ({ route }) => {
   // console.log("route.params: ", route.params);
@@ -7,17 +8,17 @@ export const MapScreen = ({ route }) => {
   return (
     <View style={styles.container}>
       <MapView
-        style={styles.map}
+        style={styles.mapStyle}
         region={{
-          // latitude: route.params.latitude,
-          // longitude: route.params.longitude,
           latitude,
           longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
         minZoomLevel={15}
-      />
+      >
+        <Marker coordinate={{ latitude, longitude }} />
+      </MapView>
     </View>
   );
 };
@@ -27,8 +28,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  map: {
+  mapStyle: {
     flex: 1,
-    backgroundColor: "#d1cbcb",
   },
 });
+
+MapScreen.propTypes = {
+  route: PropTypes.object.isRequired,
+};

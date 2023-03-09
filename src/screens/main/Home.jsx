@@ -34,9 +34,9 @@ export const Home = ({ navigation }) => {
         name="Posts"
         component={PostsScreen}
         options={{
-          //   tabBarStyle: {
-          //     display: "none",
-          //   },
+          // tabBarStyle: {
+          //   display: "none",
+          // },
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <SimpleLineIcons
