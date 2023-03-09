@@ -49,16 +49,6 @@ export const CreatePostsScreen = ({ navigation }) => {
     })();
   }, []);
 
-  if (hasCameraPermission === undefined) {
-    return <Text>Requesting permissions...</Text>;
-  } else if (!hasCameraPermission) {
-    return (
-      <Text>
-        Permission for camera not granted. Please change this in settings.
-      </Text>
-    );
-  }
-
   // location permission
   useEffect(() => {
     (async () => {
@@ -71,6 +61,16 @@ export const CreatePostsScreen = ({ navigation }) => {
       }
     })();
   }, []);
+
+  if (hasCameraPermission === undefined) {
+    return <Text>Requesting permissions...</Text>;
+  } else if (!hasCameraPermission) {
+    return (
+      <Text>
+        Permission for camera not granted. Please change this in settings.
+      </Text>
+    );
+  }
 
   const getUserLocation = async () => {
     let location = await Location.getCurrentPositionAsync({});
