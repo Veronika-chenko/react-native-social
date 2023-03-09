@@ -23,7 +23,7 @@ export const DefaultPostsScreen = ({ route, navigation }) => {
       setPosts((prev) => [...prev, route.params]);
     }
   }, [route.params]);
-  // console.log("route.params:", route.params.photo.uri)
+  // console.log("route.params:", route.params);
   const [fontsLoaded] = useFonts({
     "Roboto-Bold": require("../../../assets/fonts/Roboto/Roboto-Bold.ttf"),
     "Roboto-Medium": require("../../../assets/fonts/Roboto/Roboto-Medium.ttf"),
@@ -61,7 +61,8 @@ export const DefaultPostsScreen = ({ route, navigation }) => {
                 source={{ uri: item.photo.uri }}
                 style={styles.postImage}
               />
-              <Text style={styles.postTitle}>Forest</Text>
+              {/* <Text style={styles.postTitle}>Forest</Text> */}
+              <Text style={styles.postTitle}>{item.title}</Text>
               <View style={styles.postFooter}>
                 {/* <View style={styles.postCommentWrap}>
                             <Feather name="message-circle" size={24} color="#BDBDBD" style={styles.commentIcon} />
@@ -83,7 +84,9 @@ export const DefaultPostsScreen = ({ route, navigation }) => {
                 <TouchableOpacity
                   style={{ flexDirection: "row" }}
                   activeOpacity={0.7}
-                  onPress={() => navigation.navigate("MapScreen")}
+                  onPress={() =>
+                    navigation.navigate("MapScreen", item.location)
+                  }
                 >
                   <Feather
                     name="map-pin"
@@ -91,7 +94,8 @@ export const DefaultPostsScreen = ({ route, navigation }) => {
                     color="#BDBDBD"
                     style={{ marginRight: 3 }}
                   />
-                  <Text style={styles.postLocationText}>Location</Text>
+                  {/* <Text style={styles.postLocationText}>Location</Text> */}
+                  <Text style={styles.postLocationText}>{item.region}</Text>
                 </TouchableOpacity>
               </View>
             </View>

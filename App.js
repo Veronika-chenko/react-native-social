@@ -1,10 +1,12 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from "@react-navigation/stack";
+import { Provider } from 'react-redux';
 // auth screens
 import { RegistrationScreen } from './src/screens/auth/RegistrationScreen';
 import { LoginScreen } from './src/screens/auth/LoginScreen';
 // main screens
 import { Home } from './src/screens/main/Home';
+import { store } from './redux/store';
 
 const AuthStack = createStackNavigator();
 
@@ -13,7 +15,8 @@ const AuthStack = createStackNavigator();
 export default function App() {
   return (
     // <Text>ASd</Text>
-    <NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
       <AuthStack.Navigator>
         <AuthStack.Screen 
           options={{
@@ -35,5 +38,6 @@ export default function App() {
           component={Home}/>
         </AuthStack.Navigator>
     </NavigationContainer>
+    </Provider>
   );
 }
