@@ -1,60 +1,67 @@
 import { useState } from "react";
-import { StyleSheet, TextInput } from "react-native";
-import PropTypes from 'prop-types';
+import { StyleSheet, TextInput, View } from "react-native";
+import PropTypes from "prop-types";
+import { Feather } from "@expo/vector-icons";
 
 export const PostInput = ({
-    placeholder,
-    value,
-    onChangeText,
-    marginStyle,
-    onFocus,
-    secureTextEntry=false
+  placeholder,
+  name,
+  value,
+  onChangeText,
+  onFocus,
+  marginStyle,
 }) => {
-    const [isFocus, setIsFocus] = useState(false);
+  const isLocation = name === "location";
+  const [isFocus, setIsFocus] = useState(false);
 
-    return(
-        <TextInput 
-            style={{
-                ...styles.input, 
-                ...marginStyle,
-                borderBottomColor: isFocus ? '#FF6C00' : '#E8E8E8',
-                // backgroundColor: isFocus ? '#fff' : '#F6F6F6',
-            }}
-            placeholder={placeholder}
-            placeholderTextColor={'#BDBDBD'}
-            onChangeText={onChangeText}
-            value={value}
-            onFocus={() => {
-                setIsFocus(true)
-                onFocus()
-            }}
-            onBlur={() => setIsFocus(false)}
-            secureTextEntry={secureTextEntry}
-            />
-    );
-}
+  return (
+    <View style={{ position: "relative" }}>
+      {isLocation && (
+        <Feather
+          name="map-pin"
+          size={24}
+          color="#BDBDBD"
+          style={{ position: "absolute", top: 11 }}
+        />
+      )}
+      <TextInput
+        style={{
+          ...styles.input,
+          ...marginStyle,
+          borderBottomColor: isFocus ? "#FF6C00" : "#E8E8E8",
+          paddingLeft: isLocation ? 28 : 0,
+        }}
+        placeholder={placeholder}
+        placeholderTextColor={"#BDBDBD"}
+        onChangeText={onChangeText}
+        value={value}
+        onFocus={() => {
+          setIsFocus(true);
+          onFocus();
+        }}
+        onBlur={() => setIsFocus(false)}
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-    input: {
-        height: 50,
-        paddingTop: 16,
-        paddingBottom: 16,
-        // marginBottom: 16,
-        // fontFamily: 'Roboto-Regular',
-        fontSize: 16,
-        lineHeight: 19,
-        color: '#212121',
-        // backgroundColor: '#F6F6F6',
-        borderBottomWidth: 1,
-        // borderColor: '#BDBDBD',
-        // borderRadius: 5,
-    },
-})
+  input: {
+    height: 50,
+    paddingTop: 16,
+    paddingBottom: 16,
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#212121",
+    borderBottomWidth: 1,
+  },
+});
 
 PostInput.propTypes = {
-    // placeholder: PropTypes.string.isRequired,
-    // value: PropTypes.string.isRequired,
-    // onChangeText: PropTypes.func.isRequired,
-    // onFocus: PropTypes.func.isRequired,
-    // secureTextEntry: PropTypes.bool,
-}
+  placeholder: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  onChangeText: PropTypes.func.isRequired,
+  onFocus: PropTypes.func.isRequired,
+  marginStyle: PropTypes.object.isRequired,
+  name: PropTypes.string,
+};

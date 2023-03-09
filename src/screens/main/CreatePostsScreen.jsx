@@ -5,22 +5,20 @@ import {
   View,
   TouchableOpacity,
   Image,
-  SafeAreaView,
   Keyboard,
   Platform,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
-  ScrollView,
-  Dimensions,
 } from "react-native";
+
 import { Camera, CameraType } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import { FontAwesome5, Feather } from "@expo/vector-icons";
 import * as Location from "expo-location";
-import { PostInput } from "../../components/PostInput";
-// import { SafeAreaView } from 'react-native-safe-area-context';
+import { PostInput, SubmitButton } from "../../components";
+
 const initialState = {
-  photo: "",
+  photo: null,
   title: "",
   region: "",
   location: null,
@@ -29,13 +27,12 @@ const initialState = {
 export const CreatePostsScreen = ({ navigation }) => {
   let cameraRef = useRef();
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [hasCameraPermission, setHasCameraPermission] = useState();
   const [postData, setPostData] = useState(initialState);
   //  for MediaLibrary acces gallery or camera and safe photo
+  const [hasCameraPermission, setHasCameraPermission] = useState();
   const [hasMediaPermission, setHasMediaPermission] = useState();
   const [photo, setPhoto] = useState(null);
-  const [location, setLocation] = useState(null);
-  // maybe
+  // maybe for location error
   const [errorMsg, setErrorMsg] = useState(null);
 
   // camera permission
@@ -55,7 +52,7 @@ export const CreatePostsScreen = ({ navigation }) => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         console.log("Permission to access location was denied");
-        // or
+        // or:
         // setErrorMsg("Permission to access location was denied");
         // return;
       }
@@ -114,7 +111,6 @@ export const CreatePostsScreen = ({ navigation }) => {
       behavior={Platform.OS == "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
-      {/* <ScrollView style={{borderWidth: 1}}> */}
       <TouchableWithoutFeedback
         onPress={keyboardHide}
         style={{ flex: 1, borderWidth: 1 }}
@@ -137,16 +133,29 @@ export const CreatePostsScreen = ({ navigation }) => {
                   </TouchableOpacity>
                 )}
                 {photo && (
-                  <Image
-                    style={styles.preview}
-                    source={{ uri: "data:image/jpg;base64," + photo.base64 }}
-                  />
+                  <>
+                    <Image
+                      style={styles.preview}
+                      source={{ uri: "data:image/jpg;base64," + photo.base64 }}
+                    />
+                    {/* <TouchableOpacity
+                      style={{
+                        width: 30,
+                        height: 30,
+                        backgroundColor: "#757575",
+                      }}
+                      onPress={() => setPhoto(null)}
+                    >
+                      <Text>Delete photo</Text>
+                    </TouchableOpacity> */}
+                  </>
                 )}
               </View>
             </Camera>
             <Text style={styles.helpText}>Завантажте фото</Text>
             <PostInput
               placeholder="Назва..."
+              name="title"
               value={postData.title}
               onChangeText={(value) =>
                 setPostData((prev) => ({ ...prev, title: value }))
@@ -154,9 +163,9 @@ export const CreatePostsScreen = ({ navigation }) => {
               onFocus={() => setIsShowKeyboard(true)}
               marginStyle={{ marginBottom: 16 }}
             />
-            {/* <View style={{marginBottom: isShowKeyboard ? 32: 0}}> */}
             <PostInput
               placeholder="Місцевість..."
+              name="location"
               value={postData.region}
               onChangeText={(value) =>
                 setPostData((prev) => ({ ...prev, region: value }))
@@ -164,24 +173,22 @@ export const CreatePostsScreen = ({ navigation }) => {
               onFocus={() => setIsShowKeyboard(true)}
               marginStyle={{ marginBottom: isShowKeyboard ? 32 : 0 }}
             />
-            {/* </View> */}
-
-            <TouchableOpacity
-              style={styles.mainButton}
-              activeOpacity={0.7}
-              onPress={handleSubmit}
-            >
-              <Text style={styles.buttonText}>Опублікувати</Text>
-            </TouchableOpacity>
+            <SubmitButton onPress={handleSubmit}>Опублікувати</SubmitButton>
           </View>
           <View style={styles.footer}>
-            <TouchableOpacity style={styles.trashButton} activeOpacity={0.7}>
+            <TouchableOpacity
+              style={styles.trashButton}
+              activeOpacity={0.7}
+              onPress={() => {
+                setPostData(initialState);
+                setPhoto(null);
+              }}
+            >
               <Feather name="trash-2" size={24} color="#BDBDBD" />
             </TouchableOpacity>
           </View>
         </View>
       </TouchableWithoutFeedback>
-      {/* </ScrollView> */}
     </KeyboardAvoidingView>
   );
 };
@@ -189,17 +196,12 @@ export const CreatePostsScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // width: Dimensions.get('window').width,
-    // height: Dimensions.get('window').height - 60,
     backgroundColor: "#fff",
     paddingHorizontal: 16,
-    // borderWidth: 1,
     justifyContent: "space-between",
-    // alignItems: 'center',
   },
   camera: {
     height: 240,
-    // marginTop: 32,
     borderRadius: 8,
     marginBottom: 8,
   },
@@ -209,7 +211,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 240,
     marginBottom: 8,
-    // backgroundColor: '#F6F6F6',
     backgroundColor: "transparent",
     borderRadius: 8,
   },
@@ -222,12 +223,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   helpText: {
-    // fontFamily: 'Roboto-Regular',
     fontSize: 16,
     color: "#BDBDBD",
     marginBottom: 32,
-    // borderWidth: 1,
-    // borderColor: 'red',
   },
   preview: {
     alignSelf: "stretch",
@@ -254,7 +252,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     marginHorizontal: 16,
-    // borderWidth: 1,
   },
   trashButton: {
     justifyContent: "center",
