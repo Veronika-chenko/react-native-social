@@ -84,7 +84,9 @@ export const DefaultPostsScreen = ({ route, navigation }) => {
                 <TouchableOpacity
                   style={{ flexDirection: "row" }}
                   activeOpacity={0.7}
-                  onPress={() => navigation.navigate("MapScreen")}
+                  onPress={() =>
+                    navigation.navigate("MapScreen", item.location)
+                  }
                 >
                   <Feather
                     name="map-pin"
@@ -93,9 +95,7 @@ export const DefaultPostsScreen = ({ route, navigation }) => {
                     style={{ marginRight: 3 }}
                   />
                   {/* <Text style={styles.postLocationText}>Location</Text> */}
-                  <Text style={styles.postLocationText}>
-                    {item.location.latitude}
-                  </Text>
+                  <Text style={styles.postLocationText}>{item.region}</Text>
                 </TouchableOpacity>
               </View>
             </View>

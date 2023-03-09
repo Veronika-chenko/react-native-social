@@ -22,7 +22,8 @@ import { PostInput } from "../../components/PostInput";
 const initialState = {
   photo: "",
   title: "",
-  location: "",
+  region: "",
+  location: null,
 };
 
 export const CreatePostsScreen = ({ navigation }) => {
@@ -34,6 +35,8 @@ export const CreatePostsScreen = ({ navigation }) => {
   const [hasMediaPermission, setHasMediaPermission] = useState();
   const [photo, setPhoto] = useState(null);
   const [location, setLocation] = useState(null);
+  // maybe
+  const [errorMsg, setErrorMsg] = useState(null);
 
   // camera permission
   useEffect(() => {
@@ -43,23 +46,6 @@ export const CreatePostsScreen = ({ navigation }) => {
         await MediaLibrary.requestPermissionsAsync();
       setHasCameraPermission(cameraPermission.status === "granted");
       setHasMediaPermission(mediaLibraryPermission.status === "granted");
-    })();
-  }, []);
-
-  // location permission
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.log("Permission to access location was denied");
-      }
-
-      // let location = await Location.getCurrentPositionAsync({});
-      // const coords = {
-      //   latitude: location.coords.latitude,
-      //   longitude: location.coords.longitude,
-      // };
-      // setLocation(coords);
     })();
   }, []);
 
@@ -73,6 +59,19 @@ export const CreatePostsScreen = ({ navigation }) => {
     );
   }
 
+  // location permission
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+        // or
+        // setErrorMsg("Permission to access location was denied");
+        // return;
+      }
+    })();
+  }, []);
+
   const getUserLocation = async () => {
     let location = await Location.getCurrentPositionAsync({});
     const coords = {
@@ -80,13 +79,12 @@ export const CreatePostsScreen = ({ navigation }) => {
       longitude: location.coords.longitude,
     };
     return coords;
-    // setLocation(coords);
   };
 
   let takePic = async () => {
     let options = {
       quality: 1,
-      base64: true, //baes
+      base64: true,
       exif: false,
     };
 
@@ -97,33 +95,15 @@ export const CreatePostsScreen = ({ navigation }) => {
   // submitForm
   const handleSubmit = async () => {
     const location = await getUserLocation();
-    // const data = { ...postData, location, photo };
     const data = {
       ...postData,
-      location,
       photo: photo,
+      location,
     };
-
     // console.log("postData:", data);
-
-    // navigation.navigate('Posts', {photo})
-    // navigation.navigate("DefaultPosts", { photo });
     navigation.navigate("DefaultPosts", data);
   };
 
-  // if(photo) {
-  //     let sharePic = () => {
-
-  //     }
-  //     let savePhoto = () => {
-
-  //     }
-  //     return (
-  //         <View style={styles.photoWrap}>
-  //             <Image style={styles.preview} source={{ uri: 'data:image/jpg;base64,' + photo.base64 }}/>
-  //         </View>
-  //     )
-  // }
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
@@ -177,9 +157,9 @@ export const CreatePostsScreen = ({ navigation }) => {
             {/* <View style={{marginBottom: isShowKeyboard ? 32: 0}}> */}
             <PostInput
               placeholder="Місцевість..."
-              value={postData.location}
+              value={postData.region}
               onChangeText={(value) =>
-                setPostData((prev) => ({ ...prev, location: value }))
+                setPostData((prev) => ({ ...prev, region: value }))
               }
               onFocus={() => setIsShowKeyboard(true)}
               marginStyle={{ marginBottom: isShowKeyboard ? 32 : 0 }}

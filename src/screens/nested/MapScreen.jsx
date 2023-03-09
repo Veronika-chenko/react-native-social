@@ -1,17 +1,18 @@
-import { Text, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import MapView from "react-native-maps";
 
-export const MapScreen = () => {
+export const MapScreen = ({ route }) => {
+  // console.log("route.params: ", route.params);
+  const { latitude, longitude } = route.params;
   return (
     <View style={styles.container}>
-      {/* <View style={styles.innerWrap}>
-        <Text>Text</Text>
-      </View> */}
       <MapView
-        style={styles.innerWrap}
-        initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
+        style={styles.map}
+        region={{
+          // latitude: route.params.latitude,
+          // longitude: route.params.longitude,
+          latitude,
+          longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
@@ -25,14 +26,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingTop: 32,
-    // paddingBottom: 32,
-    paddingHorizontal: 16,
   },
-  innerWrap: {
+  map: {
     flex: 1,
-    //   height:
-    backgroundColor: "#757575",
-    borderRadius: 8,
+    backgroundColor: "#d1cbcb",
   },
 });
