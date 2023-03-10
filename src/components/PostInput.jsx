@@ -48,8 +48,9 @@ export const PostInput = ({
 const styles = StyleSheet.create({
   input: {
     height: 50,
-    paddingTop: 16,
-    paddingBottom: 16,
+    // paddingTop: 16,
+    // paddingBottom: 16,
+    paddingVertical: 16,
     fontSize: 16,
     lineHeight: 19,
     color: "#212121",

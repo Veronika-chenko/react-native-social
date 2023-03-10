@@ -1,5 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { TouchableOpacity } from "react-native";
+import { auth } from "../../../firebase/config";
 // icons
 import { Ionicons } from "@expo/vector-icons";
 import { CommentsScreen, DefaultPostsScreen, MapScreen } from "../nested";
@@ -7,6 +8,15 @@ import { CommentsScreen, DefaultPostsScreen, MapScreen } from "../nested";
 const NestedScreen = createStackNavigator();
 
 export const PostsScreen = ({ navigation }) => {
+  const handleLogOut = () => {
+    auth
+      .signOut()
+      .then(() => {
+        // navigation.navigate("Login");
+        navigation.replace("Login");
+      })
+      .catch((err) => alert(err.message));
+  };
   return (
     // <NestedScreen.Navigator screenOptions={{ headerShown: false }}>
     <NestedScreen.Navigator>
@@ -27,7 +37,7 @@ export const PostsScreen = ({ navigation }) => {
             <TouchableOpacity
               activeOpacity={0.7}
               style={{ marginRight: 10 }}
-              onPress={() => navigation.navigate("Login")}
+              onPress={handleLogOut}
             >
               <Ionicons name="exit-outline" size={28} color="#BDBDBD" />
             </TouchableOpacity>

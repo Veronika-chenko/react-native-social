@@ -1,4 +1,5 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { auth } from "../../../firebase/config";
 import {
   View,
   ImageBackground,
@@ -16,6 +17,7 @@ import * as SplashScreen from "expo-splash-screen";
 
 import mountainsImage from "../../../assets/images/mountains-bg.jpg";
 import { AuthInput, SubmitButton } from "../../components";
+// import { useNavigation } from "@react-navigation/core";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -31,6 +33,15 @@ export const LoginScreen = ({ navigation }) => {
     "Roboto-Medium": require("../../../assets/fonts/Roboto/Roboto-Medium.ttf"),
     "Roboto-Regular": require("../../../assets/fonts/Roboto/Roboto-Regular.ttf"),
   });
+  // const navigation = useNavigation();
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        navigation.replace("Home");
+      }
+    });
+    return unsubscribe;
+  }, []);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -50,12 +61,22 @@ export const LoginScreen = ({ navigation }) => {
   const handleSubmit = () => {
     // console.log("userData(Log): ", userData);
     setUserData(initialState);
-    navigation.navigate("Home");
+    const { email, password } = userData;
+    // maybe ...userData: email, password
+    auth
+      .createUserWithEmailAndPassword(email, password)
+      .then((userCredentials) => {
+        const user = userCredentials.user;
+        console.log("user: ", user.email);
+        navigation.navigate("Home");
+      })
+      .catch((error) => alert(error.message));
   };
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS == "ios" ? "padding" : "height"}
+      // behavior="padding"
       style={{ flex: 1 }}
     >
       <TouchableWithoutFeedback onPress={keyboardHide}>
