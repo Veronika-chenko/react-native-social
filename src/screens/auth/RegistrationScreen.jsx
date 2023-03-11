@@ -1,4 +1,6 @@
 import { useState, useCallback } from "react";
+import { useDispatch } from "react-redux";
+
 import {
   View,
   ImageBackground,
@@ -14,6 +16,8 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+
+import { authSignUpUser } from "../../../redux/auth/authOperations";
 
 import mountainsImage from "../../../assets/images/mountains-bg.jpg";
 import userPhoto from "../../../assets/images/user-photo.png";
@@ -38,6 +42,8 @@ export const RegistrationScreen = ({ navigation }) => {
     "Roboto-Regular": require("../../../assets/fonts/Roboto/Roboto-Regular.ttf"),
   });
 
+  const dispatch = useDispatch();
+
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
       await SplashScreen.hideAsync();
@@ -55,9 +61,14 @@ export const RegistrationScreen = ({ navigation }) => {
   };
 
   const handleSubmit = () => {
+    // try {
+    dispatch(authSignUpUser(userData));
     // console.log("userData(Reg): ", userData);
     setUserData(initialState);
     navigation.navigate("Home");
+    // } catch (error) {
+    // console.log("error:", error.message)
+    // }
   };
 
   return (

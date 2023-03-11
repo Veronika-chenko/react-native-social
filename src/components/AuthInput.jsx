@@ -17,7 +17,7 @@ export const AuthInput = ({
 }) => {
   const IsPassword = name === "password";
   const [isFocus, setIsFocus] = useState(false);
-  const [hidePassword, setHidePassword] = useState(true);
+  const [hidePassword, setHidePassword] = useState(IsPassword);
 
   return (
     <View style={{ position: "relative" }}>

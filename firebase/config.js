@@ -18,6 +18,4 @@ if (firebase.apps.length === 0) {
 }
 
 const auth = firebase.auth();
-export { auth };
-
-// const analytics = getAnalytics(app);
+export { auth, app };

@@ -1,10 +1,10 @@
 import { useState, useCallback, useEffect } from "react";
-import { useDispatch } from "react-redux";
-
+import { auth } from "../../../firebase/config";
 import {
   View,
   ImageBackground,
   StyleSheet,
+  TouchableOpacity,
   Text,
   TouchableWithoutFeedback,
   Keyboard,
@@ -15,12 +15,8 @@ import {
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
-import { auth } from "../../../firebase/config";
-import { authSignInUser } from "../../../redux/auth/authOperations";
-
 import mountainsImage from "../../../assets/images/mountains-bg.jpg";
 import { AuthInput, SubmitButton } from "../../components";
-
 // import { useNavigation } from "@react-navigation/core";
 
 SplashScreen.preventAutoHideAsync();
@@ -33,23 +29,19 @@ const initialState = {
 export const LoginScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [userData, setUserData] = useState(initialState);
-  const [user, setUser] = useState(null);
   const [fontsLoaded] = useFonts({
     "Roboto-Medium": require("../../../assets/fonts/Roboto/Roboto-Medium.ttf"),
     "Roboto-Regular": require("../../../assets/fonts/Roboto/Roboto-Regular.ttf"),
   });
   // const navigation = useNavigation();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        setUser(user);
-        navigation.replace("Home");
-      }
-    });
-    return unsubscribe;
-  }, []);
+  // useEffect(() => {
+  //   const unsubscribe = auth.onAuthStateChanged((user) => {
+  //     if (user) {
+  //       navigation.replace("Home");
+  //     }
+  //   });
+  //   return unsubscribe;
+  // }, []);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -68,9 +60,18 @@ export const LoginScreen = ({ navigation }) => {
 
   const handleSubmit = () => {
     // console.log("userData(Log): ", userData);
-    dispatch(authSignInUser(userData));
-    setUserData(initialState);
+    const { email, password } = userData;
     // maybe ...userData: email, password
+    auth
+      .createUserWithEmailAndPassword(email, password)
+      .then((userCredentials) => {
+        const user = userCredentials.user;
+        console.log("user: ", user.email);
+        navigation.navigate("Home");
+      })
+      .catch((error) => alert(error.message));
+
+    setUserData(initialState);
   };
 
   return (
