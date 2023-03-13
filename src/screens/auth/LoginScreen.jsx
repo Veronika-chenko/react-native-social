@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
-
+// rn-components
 import {
   View,
   ImageBackground,
@@ -8,20 +8,19 @@ import {
   Text,
   TouchableWithoutFeedback,
   Keyboard,
-  Platform,
   KeyboardAvoidingView,
   Dimensions,
 } from "react-native";
+// fonts
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-
+// auth, redux
 import { auth } from "../../../firebase/config";
 import { authSignInUser } from "../../../redux/auth/authOperations";
-
+//  image
 import mountainsImage from "../../../assets/images/mountains-bg.jpg";
+// util components
 import { AuthInput, SubmitButton } from "../../components";
-
-// import { useNavigation } from "@react-navigation/core";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -38,14 +37,14 @@ export const LoginScreen = ({ navigation }) => {
     "Roboto-Medium": require("../../../assets/fonts/Roboto/Roboto-Medium.ttf"),
     "Roboto-Regular": require("../../../assets/fonts/Roboto/Roboto-Regular.ttf"),
   });
-  // const navigation = useNavigation();
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         setUser(user);
-        navigation.replace("Home");
+        navigation.navigate("Home");
       }
     });
     return unsubscribe;
@@ -70,15 +69,10 @@ export const LoginScreen = ({ navigation }) => {
     // console.log("userData(Log): ", userData);
     dispatch(authSignInUser(userData));
     setUserData(initialState);
-    // maybe ...userData: email, password
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS == "ios" ? "padding" : "height"}
-      // behavior="padding"
-      style={{ flex: 1 }}
-    >
+    <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
       <TouchableWithoutFeedback onPress={keyboardHide}>
         <View style={styles.container}>
           <ImageBackground source={mountainsImage} style={styles.bgImage}>
@@ -89,8 +83,6 @@ export const LoginScreen = ({ navigation }) => {
               }}
               onLayout={onLayoutRootView}
             >
-              {/* <KeyboardAvoidingView 
-                        behavior={Platform.OS == "ios" ? "padding" : "height"}> */}
               <Text style={styles.title}>Увійти</Text>
 
               <AuthInput
@@ -119,7 +111,6 @@ export const LoginScreen = ({ navigation }) => {
                   Зареєструватися
                 </Text>
               </Text>
-              {/* </KeyboardAvoidingView> */}
             </View>
           </ImageBackground>
         </View>

@@ -1,6 +1,6 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
-
+// r-n components
 import {
   View,
   ImageBackground,
@@ -9,21 +9,23 @@ import {
   Text,
   TouchableWithoutFeedback,
   Keyboard,
-  Platform,
   KeyboardAvoidingView,
   Image,
   Dimensions,
 } from "react-native";
+// fonts
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-
+// redux
 import { authSignUpUser } from "../../../redux/auth/authOperations";
-
+// images
 import mountainsImage from "../../../assets/images/mountains-bg.jpg";
-import userPhoto from "../../../assets/images/user-photo.png";
 import union from "../../../assets/images/union.png";
 import cross from "../../../assets/images/cross.png";
+import userPhoto from "../../../assets/images/user-photo.png"; // help photo
+// util components
 import { AuthInput, SubmitButton } from "../../components";
+import { auth } from "../../../firebase/config";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -36,6 +38,7 @@ const initialState = {
 export const RegistrationScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [userData, setUserData] = useState(initialState);
+  const [user, setUser] = useState(null);
   const [isPhoto, setIsPhoto] = useState(false);
   const [fontsLoaded] = useFonts({
     "Roboto-Medium": require("../../../assets/fonts/Roboto/Roboto-Medium.ttf"),
@@ -43,6 +46,16 @@ export const RegistrationScreen = ({ navigation }) => {
   });
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user);
+        navigation.navigate("Home");
+      }
+    });
+    return unsubscribe;
+  }, []);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -60,22 +73,17 @@ export const RegistrationScreen = ({ navigation }) => {
     Keyboard.dismiss();
   };
 
-  const handleSubmit = () => {
-    // try {
-    dispatch(authSignUpUser(userData));
-    // console.log("userData(Reg): ", userData);
-    setUserData(initialState);
-    navigation.navigate("Home");
-    // } catch (error) {
-    // console.log("error:", error.message)
-    // }
+  const handleSubmit = async () => {
+    dispatch(authSignUpUser(userData)); // or instead of useEffect ->
+    // .then(() => {
+    //   setUserData(initialState);
+    //   navigation.navigate("Home"); // handle if error
+    // })
+    // .catch((err) => alert(err.message));
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS == "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}
-    >
+    <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
       <TouchableWithoutFeedback onPress={keyboardHide}>
         <View style={styles.container}>
           <ImageBackground source={mountainsImage} style={styles.bgImage}>
@@ -86,8 +94,6 @@ export const RegistrationScreen = ({ navigation }) => {
               }}
               onLayout={onLayoutRootView}
             >
-              {/* <KeyboardAvoidingView 
-                        behavior={Platform.OS == "ios" ? "padding" : "height"} > */}
               <View style={{ paddingBottom: 78 }}>
                 <View style={styles.photoWrap}>
                   {isPhoto ? (
@@ -157,7 +163,6 @@ export const RegistrationScreen = ({ navigation }) => {
                   </Text>
                 </Text>
               </View>
-              {/* </KeyboardAvoidingView> */}
             </View>
           </ImageBackground>
         </View>

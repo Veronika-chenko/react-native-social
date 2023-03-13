@@ -5,15 +5,17 @@ import { auth } from "../../../firebase/config";
 import { Ionicons } from "@expo/vector-icons";
 import { CommentsScreen, DefaultPostsScreen, MapScreen } from "../nested";
 //
+import { authSignOutUser } from "../../../redux/auth/authOperations";
+import { useDispatch } from "react-redux";
 const NestedScreen = createStackNavigator();
 
 export const PostsScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+
   const handleLogOut = () => {
-    auth
-      .signOut()
+    dispatch(authSignOutUser())
       .then(() => {
-        // navigation.navigate("Login");
-        navigation.replace("Login");
+        navigation.navigate("Login");
       })
       .catch((err) => alert(err.message));
   };
