@@ -13,6 +13,7 @@ const AuthStack = createStackNavigator();
 // import { Text } from 'react-native';
 
 export default function App() {
+
   return (
     // <Text>ASd</Text>
     <Provider store={store}>

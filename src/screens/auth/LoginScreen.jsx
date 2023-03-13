@@ -1,20 +1,25 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { useDispatch } from "react-redux";
+// rn-components
 import {
   View,
   ImageBackground,
   StyleSheet,
-  TouchableOpacity,
   Text,
   TouchableWithoutFeedback,
   Keyboard,
-  Platform,
   KeyboardAvoidingView,
   Dimensions,
 } from "react-native";
+// fonts
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-
+// auth, redux
+import { auth } from "../../../firebase/config";
+import { authSignInUser } from "../../../redux/auth/authOperations";
+//  image
 import mountainsImage from "../../../assets/images/mountains-bg.jpg";
+// util components
 import { AuthInput, SubmitButton } from "../../components";
 
 SplashScreen.preventAutoHideAsync();
@@ -27,10 +32,23 @@ const initialState = {
 export const LoginScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [userData, setUserData] = useState(initialState);
+  const [user, setUser] = useState(null);
   const [fontsLoaded] = useFonts({
     "Roboto-Medium": require("../../../assets/fonts/Roboto/Roboto-Medium.ttf"),
     "Roboto-Regular": require("../../../assets/fonts/Roboto/Roboto-Regular.ttf"),
   });
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user);
+        navigation.navigate("Home");
+      }
+    });
+    return unsubscribe;
+  }, []);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -49,15 +67,12 @@ export const LoginScreen = ({ navigation }) => {
 
   const handleSubmit = () => {
     // console.log("userData(Log): ", userData);
+    dispatch(authSignInUser(userData));
     setUserData(initialState);
-    navigation.navigate("Home");
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS == "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}
-    >
+    <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
       <TouchableWithoutFeedback onPress={keyboardHide}>
         <View style={styles.container}>
           <ImageBackground source={mountainsImage} style={styles.bgImage}>
@@ -68,8 +83,6 @@ export const LoginScreen = ({ navigation }) => {
               }}
               onLayout={onLayoutRootView}
             >
-              {/* <KeyboardAvoidingView 
-                        behavior={Platform.OS == "ios" ? "padding" : "height"}> */}
               <Text style={styles.title}>Увійти</Text>
 
               <AuthInput
@@ -98,7 +111,6 @@ export const LoginScreen = ({ navigation }) => {
                   Зареєструватися
                 </Text>
               </Text>
-              {/* </KeyboardAvoidingView> */}
             </View>
           </ImageBackground>
         </View>

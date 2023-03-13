@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { Image, StyleSheet, Text, View, FlatList } from "react-native";
-
+import { auth } from "../../../firebase/config";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
@@ -40,8 +40,9 @@ export const DefaultPostsScreen = ({ route, navigation }) => {
       <View style={styles.userItem}>
         <Image source={userPhoto} style={styles.userPhoto} />
         <View>
-          <Text style={styles.userName}>Natali Romanova</Text>
-          <Text style={styles.userEmail}>email@example.com</Text>
+          <Text style={styles.userName}>{auth.currentUser?.displayName}</Text>
+          {/* <Text style={styles.userEmail}>email@example.com</Text> */}
+          <Text style={styles.userEmail}>{auth.currentUser?.email}</Text>
         </View>
       </View>
       <FlatList
