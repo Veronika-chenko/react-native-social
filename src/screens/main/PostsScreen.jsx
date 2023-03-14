@@ -1,12 +1,14 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { TouchableOpacity } from "react-native";
-import { auth } from "../../../firebase/config";
+import { useDispatch } from "react-redux";
+
+import { auth } from "../../firebase/config";
+import { authSignOutUser } from "../../redux/auth/authOperations";
 // icons
 import { Ionicons } from "@expo/vector-icons";
 import { CommentsScreen, DefaultPostsScreen, MapScreen } from "../nested";
 //
-import { authSignOutUser } from "../../../redux/auth/authOperations";
-import { useDispatch } from "react-redux";
+
 const NestedScreen = createStackNavigator();
 
 export const PostsScreen = ({ navigation }) => {
@@ -25,7 +27,6 @@ export const PostsScreen = ({ navigation }) => {
       {/* 1 */}
       <NestedScreen.Screen
         name="DefaultPosts"
-        // component={DefaultPostsScreen}
         component={DefaultPostsScreen}
         options={{
           title: "Публікації",

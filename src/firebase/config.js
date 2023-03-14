@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
-// import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
 import { getAuth } from "firebase/auth";
+import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
+import { getStorage, ref } from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBh9U-1o16rciIDH81dZa_smqXoFICpTb4",
@@ -14,15 +15,10 @@ const firebaseConfig = {
 // configuration and shares authentication across Firebase services.
 const firebaseApp = initializeApp(firebaseConfig); // initializeApp({})
 export const auth = getAuth(firebaseApp);
-// const db = getFirestore(app);
+// const db = getFirestore(firebaseApp);
+// const storage = getStorage();
+// const storageRef = ref(storage);
 
-// Initialize Firebase
-// let app;
-// if (firebase.apps.length === 0) {
-//     app = firebase.initializeApp(firebaseConfig);
-// } else {
-//     app = firebase.app()
-// }
 
-// const auth = firebase.auth();
-// export { auth, app };
+// const postCol = collection(db, 'posts');
+// const snapshot = getDocs(postCol);

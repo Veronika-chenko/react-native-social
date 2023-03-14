@@ -3,11 +3,11 @@ import PropTypes from "prop-types";
 import { Feather } from "@expo/vector-icons";
 
 export const PostItem = ({ item, navigation }) => {
-  const { photo, title, region, location } = item;
+  const { photoURI, title, region, location } = item;
 
   return (
     <View style={styles.postItem}>
-      <Image source={{ uri: photo.uri }} style={styles.postImage} />
+      <Image source={{ uri: photoURI }} style={styles.postImage} />
       <Text style={styles.postTitle}>{title}</Text>
       <View style={styles.postFooter}>
         <TouchableOpacity
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
 
 PostItem.propTypes = {
   item: PropTypes.shape({
-    photo: PropTypes.object.isRequired,
+    photoURI: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     region: PropTypes.string.isRequired,
     location: PropTypes.object.isRequired,

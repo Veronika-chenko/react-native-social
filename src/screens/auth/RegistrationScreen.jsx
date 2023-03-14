@@ -17,7 +17,7 @@ import {
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 // redux
-import { authSignUpUser } from "../../../redux/auth/authOperations";
+import { authSignUpUser } from "../../redux/auth/authOperations";
 // images
 import mountainsImage from "../../../assets/images/mountains-bg.jpg";
 import union from "../../../assets/images/union.png";
@@ -25,7 +25,7 @@ import cross from "../../../assets/images/cross.png";
 import userPhoto from "../../../assets/images/user-photo.png"; // help photo
 // util components
 import { AuthInput, SubmitButton } from "../../components";
-import { auth } from "../../../firebase/config";
+import { auth } from "../../firebase/config";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -47,15 +47,15 @@ export const RegistrationScreen = ({ navigation }) => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        setUser(user);
-        navigation.navigate("Home");
-      }
-    });
-    return unsubscribe;
-  }, []);
+  // useEffect(() => {
+  //   const unsubscribe = auth.onAuthStateChanged((user) => {
+  //     if (user) {
+  //       setUser(user);
+  //       navigation.navigate("Home");
+  //     }
+  //   });
+  //   return unsubscribe;
+  // }, []);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -74,12 +74,12 @@ export const RegistrationScreen = ({ navigation }) => {
   };
 
   const handleSubmit = async () => {
-    dispatch(authSignUpUser(userData)); // or instead of useEffect ->
-    // .then(() => {
-    //   setUserData(initialState);
-    //   navigation.navigate("Home"); // handle if error
-    // })
-    // .catch((err) => alert(err.message));
+    dispatch(authSignUpUser(userData)) // or instead of useEffect ->
+      .then(() => {
+        setUserData(initialState);
+        navigation.navigate("Home"); // handle if error
+      })
+      .catch((err) => alert(err.message));
   };
 
   return (

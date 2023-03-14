@@ -2,7 +2,7 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     updateProfile,
-    deleteUser,
+    signOut,
 } from 'firebase/auth';
 
 import { auth } from '../../firebase/config';
@@ -52,7 +52,7 @@ export const authSignInUser = ({email, password}) => async (dispatch, getState) 
 }
 
 export const authSignOutUser = () => async (dispatch, getState) => { 
-    await deleteUser(auth.currentUser);
+    await signOut(auth);
     dispatch(authSlice.actions.authSignOut());
 }
 export const authStateChangeUser = () => async (dispatch, getState) => { }

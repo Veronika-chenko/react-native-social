@@ -1,8 +1,9 @@
 import { useState, useCallback, useEffect } from "react";
 import { Image, StyleSheet, Text, View, FlatList } from "react-native";
-import { auth } from "../../../firebase/config";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+
+import { auth } from "../../firebase/config";
 
 import userPhoto from "../../../assets/images/user-photo.png";
 import { PostItem } from "../../components";
