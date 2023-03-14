@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { onAuthStateChanged } from "firebase/auth";
 // rn-components
 import {
   View,
@@ -15,8 +16,8 @@ import {
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 // auth, redux
-import { auth } from "../../../firebase/config";
-import { authSignInUser } from "../../../redux/auth/authOperations";
+import { auth } from "../../firebase/config";
+import { authSignInUser } from "../../redux/auth/authOperations";
 //  image
 import mountainsImage from "../../../assets/images/mountains-bg.jpg";
 // util components
@@ -41,7 +42,7 @@ export const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
         navigation.navigate("Home");

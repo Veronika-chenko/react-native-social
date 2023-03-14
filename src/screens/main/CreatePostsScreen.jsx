@@ -18,7 +18,7 @@ import * as Location from "expo-location";
 import { PostInput, SubmitButton } from "../../components";
 
 const initialState = {
-  photo: null,
+  photoURI: null,
   title: "",
   region: "",
   location: null,
@@ -31,7 +31,7 @@ export const CreatePostsScreen = ({ navigation }) => {
   //  for MediaLibrary acces gallery or camera and safe photo
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [hasMediaPermission, setHasMediaPermission] = useState();
-  const [photo, setPhoto] = useState(null);
+  const [photoURI, setPhotoURI] = useState(null);
   // maybe for location error
   const [errorMsg, setErrorMsg] = useState(null);
 
@@ -78,23 +78,18 @@ export const CreatePostsScreen = ({ navigation }) => {
     return coords;
   };
 
-  let takePic = async () => {
-    let options = {
-      quality: 1,
-      base64: true,
-      exif: false,
-    };
-
-    let newPhoto = await cameraRef.current.takePictureAsync(options);
-    setPhoto(newPhoto);
+  const takePic = async () => {
+    const newPhoto = await cameraRef.current.takePictureAsync();
+    setPhotoURI(newPhoto.uri);
   };
 
   // submitForm
   const handleSubmit = async () => {
     const location = await getUserLocation();
+    // console.log("photoURI: ", photoURI);
     const data = {
       ...postData,
-      photo: photo,
+      photoURI,
       location,
     };
     // console.log("postData:", data);
@@ -107,10 +102,7 @@ export const CreatePostsScreen = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS == "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}
-    >
+    <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
       <TouchableWithoutFeedback
         onPress={keyboardHide}
         style={{ flex: 1, borderWidth: 1 }}
@@ -123,7 +115,7 @@ export const CreatePostsScreen = ({ navigation }) => {
               // type={type}
             >
               <View style={styles.photoWrap}>
-                {!photo && (
+                {!photoURI && (
                   <TouchableOpacity
                     style={styles.photoButton}
                     activeOpacity={0.7}
@@ -132,11 +124,12 @@ export const CreatePostsScreen = ({ navigation }) => {
                     <FontAwesome5 name="camera" size={24} color="#BDBDBD" />
                   </TouchableOpacity>
                 )}
-                {photo && (
+                {photoURI && (
                   <>
                     <Image
                       style={styles.preview}
-                      source={{ uri: "data:image/jpg;base64," + photo.base64 }}
+                      // source={{ uri: "data:image/jpg;base64," + photo.base64 }}
+                      source={{ uri: photoURI }}
                     />
                     {/* <TouchableOpacity
                       style={{
@@ -181,7 +174,7 @@ export const CreatePostsScreen = ({ navigation }) => {
               activeOpacity={0.7}
               onPress={() => {
                 setPostData(initialState);
-                setPhoto(null);
+                setPhotoURI(null);
               }}
             >
               <Feather name="trash-2" size={24} color="#BDBDBD" />

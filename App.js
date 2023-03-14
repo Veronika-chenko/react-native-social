@@ -6,7 +6,7 @@ import { RegistrationScreen } from './src/screens/auth/RegistrationScreen';
 import { LoginScreen } from './src/screens/auth/LoginScreen';
 // main screens
 import { Home } from './src/screens/main/Home';
-import { store } from './redux/store';
+import { store } from './src/redux/store';
 
 const AuthStack = createStackNavigator();
 
