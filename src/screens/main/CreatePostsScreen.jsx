@@ -15,7 +15,14 @@ import { Camera, CameraType } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import { FontAwesome5, Feather } from "@expo/vector-icons";
 import * as Location from "expo-location";
+import "react-native-get-random-values";
 import { PostInput, SubmitButton } from "../../components";
+import { uploadImage } from "../../firebase/storeManager";
+import { addPost } from "../../firebase/postsManager";
+import { addDoc, collection } from "firebase/firestore";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../redux/auth/authSelectors";
+import { db } from "../../firebase/config";
 
 const initialState = {
   photoURI: null,
@@ -26,6 +33,7 @@ const initialState = {
 
 export const CreatePostsScreen = ({ navigation }) => {
   let cameraRef = useRef();
+  const { email, userId, nickname } = useSelector(selectUser);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [postData, setPostData] = useState(initialState);
   //  for MediaLibrary acces gallery or camera and safe photo
@@ -83,17 +91,37 @@ export const CreatePostsScreen = ({ navigation }) => {
     setPhotoURI(newPhoto.uri);
   };
 
+  // uploadPostToDb
+  const uploadPostToDb = async (post) => {
+    try {
+      const createPost = await addDoc(collection(db, "posts"), post);
+      console.log("create successful");
+    } catch (error) {
+      console.log("!!!!!!!!", error.message);
+    }
+  };
+
   // submitForm
   const handleSubmit = async () => {
-    const location = await getUserLocation();
-    // console.log("photoURI: ", photoURI);
-    const data = {
-      ...postData,
-      photoURI,
-      location,
-    };
-    // console.log("postData:", data);
-    navigation.navigate("DefaultPosts", data);
+    try {
+      const newPhotoURI = await uploadImage(photoURI);
+
+      const location = await getUserLocation();
+      // // console.log("photoURI: ", photoURI);
+      const data = {
+        ...postData,
+        userId,
+        userName: nickname,
+        photoURI: newPhotoURI,
+        location,
+      };
+      // const newPost = await addPost(data);
+      // console.log("newPost:", newPost);
+      uploadPostToDb(data);
+    } catch (error) {
+      console.log("error on created", error.message);
+    }
+    // navigation.navigate("DefaultPosts", data);
   };
 
   const keyboardHide = () => {
@@ -126,11 +154,7 @@ export const CreatePostsScreen = ({ navigation }) => {
                 )}
                 {photoURI && (
                   <>
-                    <Image
-                      style={styles.preview}
-                      // source={{ uri: "data:image/jpg;base64," + photo.base64 }}
-                      source={{ uri: photoURI }}
-                    />
+                    <Image style={styles.preview} source={{ uri: photoURI }} />
                     {/* <TouchableOpacity
                       style={{
                         width: 30,

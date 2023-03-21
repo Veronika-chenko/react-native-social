@@ -74,6 +74,8 @@ export const RegistrationScreen = ({ navigation }) => {
   };
 
   const handleSubmit = async () => {
+    const { login, email, password } = userData;
+    if (!login || !email || !password) return;
     dispatch(authSignUpUser(userData)) // or instead of useEffect ->
       .then(() => {
         setUserData(initialState);
