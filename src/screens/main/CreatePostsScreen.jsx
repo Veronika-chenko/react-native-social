@@ -94,7 +94,9 @@ export const CreatePostsScreen = ({ navigation }) => {
   // uploadPostToDb
   const uploadPostToDb = async (post) => {
     try {
-      const createPost = await addDoc(collection(db, "posts"), post);
+      console.log("pre post db");
+      const createPost = await addDoc(collection(db, "posts/"), { id: "wer" });
+
       console.log("create successful");
     } catch (error) {
       console.log("!!!!!!!!", error.message);
@@ -104,9 +106,12 @@ export const CreatePostsScreen = ({ navigation }) => {
   // submitForm
   const handleSubmit = async () => {
     try {
+      console.log(1);
       const newPhotoURI = await uploadImage(photoURI);
+      console.log(2);
 
       const location = await getUserLocation();
+      console.log(3);
       // // console.log("photoURI: ", photoURI);
       const data = {
         ...postData,
@@ -117,7 +122,9 @@ export const CreatePostsScreen = ({ navigation }) => {
       };
       // const newPost = await addPost(data);
       // console.log("newPost:", newPost);
-      uploadPostToDb(data);
+      console.log(4);
+      await uploadPostToDb(data);
+      console.log(5);
     } catch (error) {
       console.log("error on created", error.message);
     }
