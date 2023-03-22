@@ -93,7 +93,10 @@ export const LoginScreen = ({ navigation }) => {
       dispatch(authSignInUser(userData));
       setUserData(initialState);
       navigation.navigate("Home");
-    } catch (error) {}
+    } catch (error) {
+      console.log(error.message);
+      alert(error.message);
+    }
   };
 
   return (
