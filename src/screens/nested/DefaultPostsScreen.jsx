@@ -64,10 +64,10 @@ export const DefaultPostsScreen = ({ route, navigation }) => {
       <View style={styles.userItem}>
         <Image source={userPhoto} style={styles.userPhoto} />
         <View>
-          <Text style={styles.userName}>{auth.currentUser?.displayName}</Text>
-          {/* <Text style={styles.userName}>{userNickname}</Text> */}
-          <Text style={styles.userEmail}>{auth.currentUser?.email}</Text>
-          {/* <Text style={styles.userEmail}>{userEmail}</Text> */}
+          {/* <Text style={styles.userName}>{auth.currentUser?.displayName}</Text> */}
+          <Text style={styles.userName}>{userNickname}</Text>
+          {/* <Text style={styles.userEmail}>{auth.currentUser?.email}</Text> */}
+          <Text style={styles.userEmail}>{userEmail}</Text>
         </View>
       </View>
       <FlatList

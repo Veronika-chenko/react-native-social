@@ -17,7 +17,10 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 // auth, redux
 import { auth } from "../../firebase/config";
-import { authSignInUser } from "../../redux/auth/authOperations";
+import {
+  authSignInUser,
+  authStateChangeUser,
+} from "../../redux/auth/authOperations";
 //  image
 import mountainsImage from "../../../assets/images/mountains-bg.jpg";
 // util components
@@ -41,15 +44,31 @@ export const LoginScreen = ({ navigation }) => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
-        navigation.navigate("Home");
-      }
-    });
-    return unsubscribe;
-  }, []);
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //       console.log("user in effect:", user);
+  //       setUser(user);
+  //       // dispatch(authStateChangeUser(user));
+  //       navigation.navigate("Home");
+  //     }
+  //   });
+  //   return unsubscribe;
+  // }, []);
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //       console.log("user in Login effect:", user);
+  //       // setUser(user);
+  //       // const uid = user.uid;
+  //       // const email = user.email;
+  //       // const nickname = user.displayName;
+  //       dispatch(authStateChangeUser(user));
+  //       navigation.navigate("Home");
+  //     }
+  //   });
+  //   return unsubscribe;
+  // }, []);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -67,11 +86,14 @@ export const LoginScreen = ({ navigation }) => {
   };
 
   const handleSubmit = () => {
-    const { email, password } = userData;
-    if (!email || !password) return;
-    // console.log("userData(Log): ", userData);
-    dispatch(authSignInUser(userData));
-    setUserData(initialState);
+    try {
+      const { email, password } = userData;
+      if (!email || !password) return;
+      // console.log("userData(Log): ", userData);
+      dispatch(authSignInUser(userData));
+      setUserData(initialState);
+      navigation.navigate("Home");
+    } catch (error) {}
   };
 
   return (

@@ -19,7 +19,7 @@ import "react-native-get-random-values";
 import { PostInput, SubmitButton } from "../../components";
 import { uploadImage } from "../../firebase/storeManager";
 import { addPost } from "../../firebase/postsManager";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/auth/authSelectors";
 import { db } from "../../firebase/config";
@@ -33,7 +33,11 @@ const initialState = {
 
 export const CreatePostsScreen = ({ navigation }) => {
   let cameraRef = useRef();
-  const { email, userId, nickname } = useSelector(selectUser);
+  const [userData, setUserData] = useState(null);
+  const { email, userId, nickname } = useSelector((state) => state.auth);
+  // const email = useSelector((state) => state.auth.email);
+  console.log("here", email, userId, nickname);
+  console.log("here", email);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [postData, setPostData] = useState(initialState);
   //  for MediaLibrary acces gallery or camera and safe photo
@@ -57,7 +61,7 @@ export const CreatePostsScreen = ({ navigation }) => {
   // location permission
   useEffect(() => {
     (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
+      const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         console.log("Permission to access location was denied");
         // or:
@@ -78,7 +82,7 @@ export const CreatePostsScreen = ({ navigation }) => {
   }
 
   const getUserLocation = async () => {
-    let location = await Location.getCurrentPositionAsync({});
+    const location = await Location.getCurrentPositionAsync({});
     const coords = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
@@ -95,9 +99,9 @@ export const CreatePostsScreen = ({ navigation }) => {
   const uploadPostToDb = async (post) => {
     try {
       console.log("pre post db");
-      const createPost = await addDoc(collection(db, "posts/"), { id: "wer" });
 
-      console.log("create successful");
+      const docRef = await addDoc(collection(db, "posts"), post);
+      console.log("Document written with ID: ", docRef.id);
     } catch (error) {
       console.log("!!!!!!!!", error.message);
     }
@@ -106,25 +110,20 @@ export const CreatePostsScreen = ({ navigation }) => {
   // submitForm
   const handleSubmit = async () => {
     try {
-      console.log(1);
       const newPhotoURI = await uploadImage(photoURI);
-      console.log(2);
-
       const location = await getUserLocation();
-      console.log(3);
-      // // console.log("photoURI: ", photoURI);
+      console.log("after photo and location");
       const data = {
         ...postData,
-        userId,
+        userId: userId,
         userName: nickname,
         photoURI: newPhotoURI,
-        location,
+        location: location,
       };
+      console.log("postData in data: ", data);
       // const newPost = await addPost(data);
       // console.log("newPost:", newPost);
-      console.log(4);
-      await uploadPostToDb(data);
-      console.log(5);
+      // await uploadPostToDb(data);
     } catch (error) {
       console.log("error on created", error.message);
     }

@@ -15,10 +15,21 @@ export const authSlice = createSlice({
             ...state,
             userId: payload.userId,
             nickname: payload.login,
+            email: payload.email, // для логінізації
         }),
+        // updateUserProfile: (state, { payload }) => ({
+        //     ...state,
+        //     userId: payload.userId,
+        //     nickname: payload.login,
+        //     email: payload.email, // для логінізації
+        // }),
         authStateChange: (state, { payload }) => ({
             ...state,
-            stateChange: payload.stateChange
+            // userId: payload.userId,
+            // nickname: payload.nickname,
+            // // nickname: payload,
+            // email: payload.email,
+            stateChange: payload.stateChange,
         }),
         authSignOut: () => state,
     }
