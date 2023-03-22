@@ -3,8 +3,7 @@ import PropTypes from "prop-types";
 import { Feather } from "@expo/vector-icons";
 
 export const PostItem = ({ item, navigation }) => {
-  const { photoURI, title, region, location, comments } = item;
-  // console.log("item:", item);
+const { photoURI, title, region, location, comments } = item;
 
   return (
     <View style={styles.postItem}>
@@ -86,7 +85,7 @@ const styles = StyleSheet.create({
 
 PostItem.propTypes = {
   item: PropTypes.shape({
-    // photoURI: PropTypes.string.isRequired,
+    photoURI: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     region: PropTypes.string.isRequired,
     location: PropTypes.object.isRequired,

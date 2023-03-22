@@ -41,7 +41,6 @@ export const CreatePostsScreen = ({ navigation }) => {
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [hasMediaPermission, setHasMediaPermission] = useState();
   const [photoURI, setPhotoURI] = useState(null);
-
   // maybe for location error
   const [errorMsg, setErrorMsg] = useState(null);
 
@@ -100,6 +99,7 @@ export const CreatePostsScreen = ({ navigation }) => {
       alert("all fields are required");
       return;
     }
+    
     try {
       const newPhotoURI = await uploadImage(photoURI);
       const location = await getUserLocation();

@@ -17,10 +17,12 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 // auth, redux
 import { auth } from "../../firebase/config";
+
 import {
   authSignInUser,
   authStateChangeUser,
 } from "../../redux/auth/authOperations";
+
 //  image
 import mountainsImage from "../../../assets/images/mountains-bg.jpg";
 // util components

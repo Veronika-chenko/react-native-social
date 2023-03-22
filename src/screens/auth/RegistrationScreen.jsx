@@ -64,10 +64,12 @@ export const RegistrationScreen = ({ navigation }) => {
   const handleSubmit = async () => {
     const { login, email, password } = userData;
     if (!login || !email || !password) return;
+    
     dispatch(authSignUpUser(userData))
       .then(() => {
         setUserData(initialState);
         navigation.navigate("Home");
+
       })
       .catch((err) => alert(err.message));
   };

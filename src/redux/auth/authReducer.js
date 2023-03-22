@@ -28,9 +28,9 @@ export const authSlice = createSlice({
             nickname: payload.login,
             email: payload.email,
             // stateChange: payload.stateChange,
+
         }),
         authSignOut: () => state,
     }
 })
 
-// console.log("authSlice:", authSlice)

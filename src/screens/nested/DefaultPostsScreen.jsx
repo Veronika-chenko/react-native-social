@@ -5,6 +5,7 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
 import { selectUser } from "../../redux/auth/authSelectors";
+
 import { PostItem } from "../../components";
 import { getPosts } from "../../firebase/postsManager";
 
