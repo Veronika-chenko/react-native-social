@@ -44,31 +44,16 @@ export const LoginScreen = ({ navigation }) => {
 
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
-  //     if (user) {
-  //       console.log("user in effect:", user);
-  //       setUser(user);
-  //       // dispatch(authStateChangeUser(user));
-  //       navigation.navigate("Home");
-  //     }
-  //   });
-  //   return unsubscribe;
-  // }, []);
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
-  //     if (user) {
-  //       console.log("user in Login effect:", user);
-  //       // setUser(user);
-  //       // const uid = user.uid;
-  //       // const email = user.email;
-  //       // const nickname = user.displayName;
-  //       dispatch(authStateChangeUser(user));
-  //       navigation.navigate("Home");
-  //     }
-  //   });
-  //   return unsubscribe;
-  // }, []);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // console.log("user in Login effect:", user);
+        dispatch(authStateChangeUser(user));
+        navigation.navigate("Home");
+      }
+    });
+    return unsubscribe;
+  }, []);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {

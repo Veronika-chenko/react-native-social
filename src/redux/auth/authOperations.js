@@ -39,7 +39,7 @@ export const authSignUpUser = ({email, password, login}) => async (dispatch, get
 export const authSignInUser = ({email, password}) => async (dispatch, getState) => { 
     try {
         const user = await signInWithEmailAndPassword(auth, email, password);
-        // витаскуємо id і displayName
+        // витаскуємо id та displayName
         const { uid, displayName } = auth.currentUser;
         console.log(43, uid, "+", displayName)
         // обновляємо користувача в redux
@@ -48,7 +48,7 @@ export const authSignInUser = ({email, password}) => async (dispatch, getState) 
             login: displayName,
             email: email,
         }))
-        console.log("user in log:", user)
+        // console.log("user in log:", user)
     } catch (error) {
         if (error.message.includes('auth/user-not-found')) {
             alert('user not found');
@@ -67,37 +67,15 @@ export const authSignOutUser = () => async (dispatch, getState) => {
     await signOut(auth);
     dispatch(authSlice.actions.authSignOut());
 }
-export const authStateChangeUser = () => async (dispatch, getState) => {
-    dispatch(authSlice.actions.authStateChange())
-    console.log(123, "inside authStateChangeUser operation")
-    // onAuthStateChanged(auth, (user) => {
-    //     console.log("user: ", user)
-    //     if (user) {
-    //         dispatch(
-    //             authSlice.actions.authStateChange({
-    //                 userId: user.uid,
-    //                 nickname: user.displayName,
-    //                 email: user.email,
-    //             })
-    //         );
-    //         dispatch(authSlice.actions.authStateChange({ stateChange: true }));
-    //     }
-    // })
-}
 
-// export const authStateChangeUser = () => async (dispatch, getState) => {
-//     console.log(123, "inside authStateChangeUser operation")
-//     onAuthStateChanged(auth, (user) => {
-//         console.log("user: ", user)
-//         if (user) {
-//             dispatch(
-//                 authSlice.actions.authStateChange({
-//                     userId: user.uid,
-//                     nickname: user.displayName,
-//                     email: user.email,
-//                 })
-//             );
-//             dispatch(authSlice.actions.authStateChange({ stateChange: true }));
-//         }
-//     })
-// }
+export const authStateChangeUser = (user) => async (dispatch, getState) => {
+    try {
+        dispatch(authSlice.actions.authStateChange({
+        userId: user.uid,
+        login: user.displayName,
+        email: user.email,
+    }))
+    } catch (error) {
+        console.log(78, "erro in authOp:", error.message)
+    }
+}
