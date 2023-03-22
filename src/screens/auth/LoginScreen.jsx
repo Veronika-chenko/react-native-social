@@ -17,7 +17,12 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 // auth, redux
 import { auth } from "../../firebase/config";
-import { authSignInUser } from "../../redux/auth/authOperations";
+
+import {
+  authSignInUser,
+  authStateChangeUser,
+} from "../../redux/auth/authOperations";
+
 //  image
 import mountainsImage from "../../../assets/images/mountains-bg.jpg";
 // util components
@@ -31,9 +36,9 @@ const initialState = {
 };
 
 export const LoginScreen = ({ navigation }) => {
-  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [userData, setUserData] = useState(initialState);
-  const [user, setUser] = useState(null);
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+
   const [fontsLoaded] = useFonts({
     "Roboto-Medium": require("../../../assets/fonts/Roboto/Roboto-Medium.ttf"),
     "Roboto-Regular": require("../../../assets/fonts/Roboto/Roboto-Regular.ttf"),
@@ -44,7 +49,7 @@ export const LoginScreen = ({ navigation }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setUser(user);
+        dispatch(authStateChangeUser(user));
         navigation.navigate("Home");
       }
     });
@@ -67,9 +72,17 @@ export const LoginScreen = ({ navigation }) => {
   };
 
   const handleSubmit = () => {
-    // console.log("userData(Log): ", userData);
-    dispatch(authSignInUser(userData));
-    setUserData(initialState);
+    const { email, password } = userData;
+    if (!email || !password) return;
+    dispatch(authSignInUser(userData))
+      .then(() => {
+        setUserData(initialState);
+        navigation.navigate("Home");
+      })
+      .catch((err) => {
+        console.log(err.message);
+        alert(err.message);
+      });
   };
 
   return (

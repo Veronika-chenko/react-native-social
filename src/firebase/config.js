@@ -1,24 +1,21 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from "firebase/auth";
-import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
-import { getStorage, ref } from 'firebase/storage';
+
+import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBh9U-1o16rciIDH81dZa_smqXoFICpTb4",
-  authDomain: "react-native-socials-7ac73.firebaseapp.com",
-  projectId: "react-native-socials-7ac73",
-  storageBucket: "react-native-socials-7ac73.appspot.com",
-  messagingSenderId: "870837503692",
-  appId: "1:870837503692:web:f2c4e7dfe89ff5920e6469"
+  apiKey: "AIzaSyD9WvJcjj0VvrMP9ATYDCr5O4teHpKpVNw",
+  authDomain: "react-native-socials-ea70a.firebaseapp.com",
+  projectId: "react-native-socials-ea70a",
+  storageBucket: "react-native-socials-ea70a.appspot.com",
+  messagingSenderId: "944455822930",
+  appId: "1:944455822930:web:0b39264aab5e7b6993b98b"
 };
-// A Firebase App is a container-like {object} that stores common 
-// configuration and shares authentication across Firebase services.
-const firebaseApp = initializeApp(firebaseConfig); // initializeApp({})
-export const auth = getAuth(firebaseApp);
-// const db = getFirestore(firebaseApp);
-// const storage = getStorage();
-// const storageRef = ref(storage);
 
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
 
-// const postCol = collection(db, 'posts');
-// const snapshot = getDocs(postCol);
+export const db = getFirestore(app);
+export const storage = getStorage(app);
+

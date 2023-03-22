@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 // r-n components
 import {
@@ -25,7 +25,6 @@ import cross from "../../../assets/images/cross.png";
 import userPhoto from "../../../assets/images/user-photo.png"; // help photo
 // util components
 import { AuthInput, SubmitButton } from "../../components";
-import { auth } from "../../firebase/config";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -36,26 +35,16 @@ const initialState = {
 };
 
 export const RegistrationScreen = ({ navigation }) => {
-  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [userData, setUserData] = useState(initialState);
-  const [user, setUser] = useState(null);
   const [isPhoto, setIsPhoto] = useState(false);
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+
   const [fontsLoaded] = useFonts({
     "Roboto-Medium": require("../../../assets/fonts/Roboto/Roboto-Medium.ttf"),
     "Roboto-Regular": require("../../../assets/fonts/Roboto/Roboto-Regular.ttf"),
   });
 
   const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   const unsubscribe = auth.onAuthStateChanged((user) => {
-  //     if (user) {
-  //       setUser(user);
-  //       navigation.navigate("Home");
-  //     }
-  //   });
-  //   return unsubscribe;
-  // }, []);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -67,17 +56,20 @@ export const RegistrationScreen = ({ navigation }) => {
     return null;
   }
 
-  // console.log("isShowKeyboard: ", isShowKeyboard)
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
   };
 
   const handleSubmit = async () => {
-    dispatch(authSignUpUser(userData)) // or instead of useEffect ->
+    const { login, email, password } = userData;
+    if (!login || !email || !password) return;
+    
+    dispatch(authSignUpUser(userData))
       .then(() => {
         setUserData(initialState);
-        navigation.navigate("Home"); // handle if error
+        navigation.navigate("Home");
+
       })
       .catch((err) => alert(err.message));
   };

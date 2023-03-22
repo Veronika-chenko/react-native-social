@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   Image,
   Keyboard,
-  Platform,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
 } from "react-native";
@@ -15,7 +14,14 @@ import { Camera, CameraType } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import { FontAwesome5, Feather } from "@expo/vector-icons";
 import * as Location from "expo-location";
+import "react-native-get-random-values";
 import { PostInput, SubmitButton } from "../../components";
+import { uploadImage } from "../../firebase/storeManager";
+// firestore
+import { uploadPostToDb } from "../../firebase/postsManager";
+// get current user info from redux
+import { useSelector } from "react-redux";
+import { selectUser } from "../../redux/auth/authSelectors";
 
 const initialState = {
   photoURI: null,
@@ -26,6 +32,9 @@ const initialState = {
 
 export const CreatePostsScreen = ({ navigation }) => {
   let cameraRef = useRef();
+  const { userId, nickname } = useSelector(selectUser);
+  // console.log("38 here", userId, nickname);
+
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [postData, setPostData] = useState(initialState);
   //  for MediaLibrary acces gallery or camera and safe photo
@@ -49,7 +58,7 @@ export const CreatePostsScreen = ({ navigation }) => {
   // location permission
   useEffect(() => {
     (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
+      const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         console.log("Permission to access location was denied");
         // or:
@@ -70,7 +79,7 @@ export const CreatePostsScreen = ({ navigation }) => {
   }
 
   const getUserLocation = async () => {
-    let location = await Location.getCurrentPositionAsync({});
+    const location = await Location.getCurrentPositionAsync({});
     const coords = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
@@ -85,15 +94,31 @@ export const CreatePostsScreen = ({ navigation }) => {
 
   // submitForm
   const handleSubmit = async () => {
-    const location = await getUserLocation();
-    // console.log("photoURI: ", photoURI);
-    const data = {
-      ...postData,
-      photoURI,
-      location,
-    };
-    // console.log("postData:", data);
-    navigation.navigate("DefaultPosts", data);
+    const { title, region } = postData;
+    if (!photoURI || !title || !region) {
+      alert("all fields are required");
+      return;
+    }
+    
+    try {
+      const newPhotoURI = await uploadImage(photoURI);
+      const location = await getUserLocation();
+
+      console.log("after photo and location");
+      const data = {
+        ...postData,
+        userId: userId,
+        userName: nickname,
+        photoURI: newPhotoURI,
+        location: location,
+        comments: [],
+      };
+      // call postManager fn
+      await uploadPostToDb(data);
+    } catch (error) {
+      console.log("error on created", error.message);
+    }
+    navigation.navigate("DefaultPosts");
   };
 
   const keyboardHide = () => {
@@ -126,11 +151,7 @@ export const CreatePostsScreen = ({ navigation }) => {
                 )}
                 {photoURI && (
                   <>
-                    <Image
-                      style={styles.preview}
-                      // source={{ uri: "data:image/jpg;base64," + photo.base64 }}
-                      source={{ uri: photoURI }}
-                    />
+                    <Image style={styles.preview} source={{ uri: photoURI }} />
                     {/* <TouchableOpacity
                       style={{
                         width: 30,

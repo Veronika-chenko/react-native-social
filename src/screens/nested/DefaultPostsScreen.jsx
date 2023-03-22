@@ -1,24 +1,33 @@
 import { useState, useCallback, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Image, StyleSheet, Text, View, FlatList } from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
-import { auth } from "../../firebase/config";
+import { selectUser } from "../../redux/auth/authSelectors";
+
+import { PostItem } from "../../components";
+import { getPosts } from "../../firebase/postsManager";
 
 import userPhoto from "../../../assets/images/user-photo.png";
-import { PostItem } from "../../components";
-// import postPhoto from '../../../assets/images/post.jpg';
 
 SplashScreen.preventAutoHideAsync();
 
-export const DefaultPostsScreen = ({ route, navigation }) => {
+export const DefaultPostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
+  // get current user info from redux:
+  const { email, nickname } = useSelector(selectUser);
+
   useEffect(() => {
-    if (route.params) {
-      setPosts((prev) => [...prev, route.params]);
-    }
-  }, [route.params]);
-  // console.log("route.params:", route.params);
+    (async () => {
+      const allPosts = await getPosts();
+      // console.log(21, allPosts);
+      // setPosts((prev) => [...prev, ...allPosts]);
+      setPosts([...allPosts]);
+    })();
+  }, []);
+
+  useEffect(() => {});
   const [fontsLoaded] = useFonts({
     "Roboto-Bold": require("../../../assets/fonts/Roboto/Roboto-Bold.ttf"),
     "Roboto-Medium": require("../../../assets/fonts/Roboto/Roboto-Medium.ttf"),
@@ -36,14 +45,12 @@ export const DefaultPostsScreen = ({ route, navigation }) => {
   }
 
   return (
-    // <Text>PostsScreen</Text>
     <View style={styles.container} onLayout={onLayoutRootView}>
       <View style={styles.userItem}>
         <Image source={userPhoto} style={styles.userPhoto} />
         <View>
-          <Text style={styles.userName}>{auth.currentUser?.displayName}</Text>
-          {/* <Text style={styles.userEmail}>email@example.com</Text> */}
-          <Text style={styles.userEmail}>{auth.currentUser?.email}</Text>
+          <Text style={styles.userName}>{nickname}</Text>
+          <Text style={styles.userEmail}>{email}</Text>
         </View>
       </View>
       <FlatList

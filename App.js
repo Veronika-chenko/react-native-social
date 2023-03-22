@@ -18,23 +18,18 @@ export default function App() {
     // <Text>ASd</Text>
     <Provider store={store}>
       <NavigationContainer>
-        <AuthStack.Navigator>
-          <AuthStack.Screen 
-            options={{
-                headerShown: false,
-            }} 
+        <AuthStack.Navigator
+          screenOptions={{
+            headerShown: false
+          }}
+        >
+          <AuthStack.Screen
             name='Login' 
             component={LoginScreen}/>
-          <AuthStack.Screen 
-            options={{
-                headerShown: false,
-            }} 
+          <AuthStack.Screen
             name='Register' 
             component={RegistrationScreen}/>
-          <AuthStack.Screen 
-            options={{
-                headerShown: false,
-            }} 
+          <AuthStack.Screen
             name='Home' 
             component={Home}/>
           </AuthStack.Navigator>
