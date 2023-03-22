@@ -47,16 +47,6 @@ export const RegistrationScreen = ({ navigation }) => {
 
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   const unsubscribe = auth.onAuthStateChanged((user) => {
-  //     if (user) {
-  //       setUser(user);
-  //       navigation.navigate("Home");
-  //     }
-  //   });
-  //   return unsubscribe;
-  // }, []);
-
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
       await SplashScreen.hideAsync();
@@ -76,10 +66,10 @@ export const RegistrationScreen = ({ navigation }) => {
   const handleSubmit = async () => {
     const { login, email, password } = userData;
     if (!login || !email || !password) return;
-    dispatch(authSignUpUser(userData)) // or instead of useEffect ->
+    dispatch(authSignUpUser(userData))
       .then(() => {
         setUserData(initialState);
-        navigation.navigate("Home"); // handle if error
+        navigation.navigate("Home");
       })
       .catch((err) => alert(err.message));
   };

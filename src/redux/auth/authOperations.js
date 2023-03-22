@@ -23,6 +23,7 @@ export const authSignUpUser = ({email, password, login}) => async (dispatch, get
         dispatch(authSlice.actions.updateUserProfile({
             userId: uid,
             login: displayName,
+            email: email,
         }))
         // console.log("user in Reg:", user)
     } catch (error) {

@@ -86,7 +86,6 @@ export const LoginScreen = ({ navigation }) => {
   };
 
   const handleSubmit = () => {
-    // try {
     const { email, password } = userData;
     if (!email || !password) return;
     dispatch(authSignInUser(userData))

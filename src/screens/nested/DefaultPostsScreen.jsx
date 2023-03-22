@@ -8,8 +8,11 @@ import { auth } from "../../firebase/config";
 
 import userPhoto from "../../../assets/images/user-photo.png";
 import { PostItem } from "../../components";
-import { useAuth } from "../../hooks/useAuth";
+// import { useAuth } from "../../hooks/useAuth"; // trash
 import { getPosts } from "../../firebase/postsManager";
+// get current user info from redux:
+import { useSelector } from "react-redux";
+import { selectUser } from "../../redux/auth/authSelectors";
 // import postPhoto from '../../../assets/images/post.jpg';
 
 SplashScreen.preventAutoHideAsync();
@@ -43,8 +46,8 @@ export const DefaultPostsScreen = ({ route, navigation }) => {
     "Roboto-Medium": require("../../../assets/fonts/Roboto/Roboto-Medium.ttf"),
     "Roboto-Regular": require("../../../assets/fonts/Roboto/Roboto-Regular.ttf"),
   });
-
-  const { userEmail, userNickname } = useAuth();
+  // get current user info from redux:
+  const { email, nickname } = useSelector(selectUser);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -64,10 +67,8 @@ export const DefaultPostsScreen = ({ route, navigation }) => {
       <View style={styles.userItem}>
         <Image source={userPhoto} style={styles.userPhoto} />
         <View>
-          {/* <Text style={styles.userName}>{auth.currentUser?.displayName}</Text> */}
-          <Text style={styles.userName}>{userNickname}</Text>
-          {/* <Text style={styles.userEmail}>{auth.currentUser?.email}</Text> */}
-          <Text style={styles.userEmail}>{userEmail}</Text>
+          <Text style={styles.userName}>{nickname}</Text>
+          <Text style={styles.userEmail}>{email}</Text>
         </View>
       </View>
       <FlatList

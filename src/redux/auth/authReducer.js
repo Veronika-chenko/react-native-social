@@ -11,18 +11,13 @@ export const authSlice = createSlice({
     name: 'auth',
     initialState: state,
     reducers: {
+        // used for login and registration
         updateUserProfile: (state, { payload }) => ({
             ...state,
             userId: payload.userId,
             nickname: payload.login,
-            email: payload.email, // для логінізації
+            email: payload.email,
         }),
-        // updateUserProfile: (state, { payload }) => ({
-        //     ...state,
-        //     userId: payload.userId,
-        //     nickname: payload.login,
-        //     email: payload.email, // для логінізації
-        // }),
         authStateChange: (state, { payload }) => ({
             ...state,
             // userId: payload.userId,
