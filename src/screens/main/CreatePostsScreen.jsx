@@ -18,8 +18,9 @@ import * as Location from "expo-location";
 import "react-native-get-random-values";
 import { PostInput, SubmitButton } from "../../components";
 import { uploadImage } from "../../firebase/storeManager";
-import { addPost } from "../../firebase/postsManager";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+// firestore
+import { uploadPostToDb } from "../../firebase/postsManager";
+// get current user info from redux
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/auth/authSelectors";
 import { db } from "../../firebase/config";
@@ -34,16 +35,16 @@ const initialState = {
 export const CreatePostsScreen = ({ navigation }) => {
   let cameraRef = useRef();
   const [userData, setUserData] = useState(null);
-  const { email, userId, nickname } = useSelector((state) => state.auth);
-  // const email = useSelector((state) => state.auth.email);
-  console.log("here", email, userId, nickname);
-  console.log("here", email);
+  const { userId, nickname } = useSelector(selectUser);
+  // console.log("38 here", userId, nickname);
+
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [postData, setPostData] = useState(initialState);
   //  for MediaLibrary acces gallery or camera and safe photo
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [hasMediaPermission, setHasMediaPermission] = useState();
   const [photoURI, setPhotoURI] = useState(null);
+
   // maybe for location error
   const [errorMsg, setErrorMsg] = useState(null);
 
@@ -95,23 +96,12 @@ export const CreatePostsScreen = ({ navigation }) => {
     setPhotoURI(newPhoto.uri);
   };
 
-  // uploadPostToDb
-  const uploadPostToDb = async (post) => {
-    try {
-      console.log("pre post db");
-
-      const docRef = await addDoc(collection(db, "posts"), post);
-      console.log("Document written with ID: ", docRef.id);
-    } catch (error) {
-      console.log("!!!!!!!!", error.message);
-    }
-  };
-
   // submitForm
   const handleSubmit = async () => {
     try {
       const newPhotoURI = await uploadImage(photoURI);
       const location = await getUserLocation();
+
       console.log("after photo and location");
       const data = {
         ...postData,
@@ -119,11 +109,10 @@ export const CreatePostsScreen = ({ navigation }) => {
         userName: nickname,
         photoURI: newPhotoURI,
         location: location,
+        comments: [],
       };
-      console.log("postData in data: ", data);
-      // const newPost = await addPost(data);
-      // console.log("newPost:", newPost);
-      // await uploadPostToDb(data);
+      // call postManager fn
+      await uploadPostToDb(data);
     } catch (error) {
       console.log("error on created", error.message);
     }
