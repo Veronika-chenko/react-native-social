@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   Image,
   Keyboard,
-  Platform,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
 } from "react-native";
@@ -23,7 +22,6 @@ import { uploadPostToDb } from "../../firebase/postsManager";
 // get current user info from redux
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/auth/authSelectors";
-import { db } from "../../firebase/config";
 
 const initialState = {
   photoURI: null,
@@ -34,7 +32,6 @@ const initialState = {
 
 export const CreatePostsScreen = ({ navigation }) => {
   let cameraRef = useRef();
-  const [userData, setUserData] = useState(null);
   const { userId, nickname } = useSelector(selectUser);
   // console.log("38 here", userId, nickname);
 
@@ -98,6 +95,11 @@ export const CreatePostsScreen = ({ navigation }) => {
 
   // submitForm
   const handleSubmit = async () => {
+    const { title, region } = postData;
+    if (!photoURI || !title || !region) {
+      alert("all fields are required");
+      return;
+    }
     try {
       const newPhotoURI = await uploadImage(photoURI);
       const location = await getUserLocation();
@@ -116,7 +118,7 @@ export const CreatePostsScreen = ({ navigation }) => {
     } catch (error) {
       console.log("error on created", error.message);
     }
-    // navigation.navigate("DefaultPosts", data);
+    navigation.navigate("DefaultPosts");
   };
 
   const keyboardHide = () => {

@@ -34,9 +34,9 @@ const initialState = {
 };
 
 export const LoginScreen = ({ navigation }) => {
-  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [userData, setUserData] = useState(initialState);
-  const [user, setUser] = useState(null);
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+
   const [fontsLoaded] = useFonts({
     "Roboto-Medium": require("../../../assets/fonts/Roboto/Roboto-Medium.ttf"),
     "Roboto-Regular": require("../../../assets/fonts/Roboto/Roboto-Regular.ttf"),
@@ -47,7 +47,6 @@ export const LoginScreen = ({ navigation }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // console.log("user in Login effect:", user);
         dispatch(authStateChangeUser(user));
         navigation.navigate("Home");
       }

@@ -1,53 +1,37 @@
 import { useState, useCallback, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Image, StyleSheet, Text, View, FlatList } from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-// import { postsdb } from "../../posts";
 
-import { auth } from "../../firebase/config";
+import { selectUser } from "../../redux/auth/authSelectors";
+import { PostItem } from "../../components";
+import { getPosts } from "../../firebase/postsManager";
 
 import userPhoto from "../../../assets/images/user-photo.png";
-import { PostItem } from "../../components";
-// import { useAuth } from "../../hooks/useAuth"; // trash
-import { getPosts } from "../../firebase/postsManager";
-// get current user info from redux:
-import { useSelector } from "react-redux";
-import { selectUser } from "../../redux/auth/authSelectors";
-// import postPhoto from '../../../assets/images/post.jpg';
 
 SplashScreen.preventAutoHideAsync();
 
-export const DefaultPostsScreen = ({ route, navigation }) => {
-  // const [posts, setPosts] = useState([]);
+export const DefaultPostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
-  // useEffect(() => {
-  //   if (route.params) {
-  //     setPosts((prev) => [...prev, route.params]);
-  //   }
-  // }, [route.params]);
+  // get current user info from redux:
+  const { email, nickname } = useSelector(selectUser);
+
   useEffect(() => {
-    if (route.params) {
-      setPosts((prev) => [...prev, postsdb]);
-    }
-  }, [route.params]);
-  // useEffect(() => {
-  //   // setPosts(getPosts());
-  //   // setPosts(postsdb);
-  // }, []);
-  // useEffect(() => {
-  //   console.log(postdb);
-  //   const postsdb = JSON.parse(`"${postdb}"`);
-  //   console.log("postsdb:", postsdb);
-  //   // setPosts();
-  // }, []);
-  // console.log("route.params:", route.params);
+    (async () => {
+      const allPosts = await getPosts();
+      // console.log(21, allPosts);
+      // setPosts((prev) => [...prev, ...allPosts]);
+      setPosts([...allPosts]);
+    })();
+  }, []);
+
+  useEffect(() => {});
   const [fontsLoaded] = useFonts({
     "Roboto-Bold": require("../../../assets/fonts/Roboto/Roboto-Bold.ttf"),
     "Roboto-Medium": require("../../../assets/fonts/Roboto/Roboto-Medium.ttf"),
     "Roboto-Regular": require("../../../assets/fonts/Roboto/Roboto-Regular.ttf"),
   });
-  // get current user info from redux:
-  const { email, nickname } = useSelector(selectUser);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -59,10 +43,7 @@ export const DefaultPostsScreen = ({ route, navigation }) => {
     return null;
   }
 
-  // useEffect(() => {}, []);
-
   return (
-    // <Text>PostsScreen</Text>
     <View style={styles.container} onLayout={onLayoutRootView}>
       <View style={styles.userItem}>
         <Image source={userPhoto} style={styles.userPhoto} />

@@ -18,6 +18,3 @@ export const auth = getAuth(app);
 
 export const db = getFirestore(app);
 export const storage = getStorage(app);
-
-// const postCol = collection(db, 'posts');
-// const snapshot = getDocs(postCol);

@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { addDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "./config";
 
 export const uploadPostToDb = async (post) => {
@@ -14,22 +14,19 @@ export const uploadPostToDb = async (post) => {
     }
 }
 
-export const getPosts = async() => {
+export const getPosts = async () => {
+    let array = []
     try {
-        // console.log("i'm here")
-        // const unsubscribe = onSnapshot(collection(db, "posts"),
-        // const unsubscribe = get(collection(db, "posts"),
-        //     querySnapshot => {
-        //         const posts = querySnapshot.docs.map(doc => ({
-        //             id: doc.id,
-        //             ...doc.data()
-        //         }));
-        //         return posts
-        // })
-        const collectionRef = collection(db, "posts");
-        const snapshot = await getDocs(collectionRef);
-        const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        return data;
+        const postsRef = collection(db, "posts");
+        const querySnapshot = await getDocs(postsRef);
+
+        querySnapshot.forEach((doc) => {
+            // console.log(doc.id, " => ", {...doc.data()});
+            array.push({postId: doc.id, ...doc.data()})
+        });
+
+        // console.log(28, array)
+        return array
     } catch (error) {
         console.log("err in getPosts: ", error.message)
     }

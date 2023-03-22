@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 // r-n components
 import {
@@ -25,7 +25,6 @@ import cross from "../../../assets/images/cross.png";
 import userPhoto from "../../../assets/images/user-photo.png"; // help photo
 // util components
 import { AuthInput, SubmitButton } from "../../components";
-import { auth } from "../../firebase/config";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -36,10 +35,10 @@ const initialState = {
 };
 
 export const RegistrationScreen = ({ navigation }) => {
-  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [userData, setUserData] = useState(initialState);
-  const [user, setUser] = useState(null);
   const [isPhoto, setIsPhoto] = useState(false);
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+
   const [fontsLoaded] = useFonts({
     "Roboto-Medium": require("../../../assets/fonts/Roboto/Roboto-Medium.ttf"),
     "Roboto-Regular": require("../../../assets/fonts/Roboto/Roboto-Regular.ttf"),
@@ -57,7 +56,6 @@ export const RegistrationScreen = ({ navigation }) => {
     return null;
   }
 
-  // console.log("isShowKeyboard: ", isShowKeyboard)
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();

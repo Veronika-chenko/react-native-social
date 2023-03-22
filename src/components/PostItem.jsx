@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import { Feather } from "@expo/vector-icons";
 
 export const PostItem = ({ item, navigation }) => {
-  const { photoURI, title, region, location } = item;
-  console.log("item:", item);
+  const { photoURI, title, region, location, comments } = item;
+  // console.log("item:", item);
 
   return (
     <View style={styles.postItem}>
@@ -22,7 +22,7 @@ export const PostItem = ({ item, navigation }) => {
             color="#BDBDBD"
             style={styles.commentIcon}
           />
-          <Text style={styles.commentQuantity}>0</Text>
+          <Text style={styles.commentQuantity}>{comments.length}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{ flexDirection: "row" }}
