@@ -86,17 +86,18 @@ export const LoginScreen = ({ navigation }) => {
   };
 
   const handleSubmit = () => {
-    try {
-      const { email, password } = userData;
-      if (!email || !password) return;
-      // console.log("userData(Log): ", userData);
-      dispatch(authSignInUser(userData));
-      setUserData(initialState);
-      navigation.navigate("Home");
-    } catch (error) {
-      console.log(error.message);
-      alert(error.message);
-    }
+    // try {
+    const { email, password } = userData;
+    if (!email || !password) return;
+    dispatch(authSignInUser(userData))
+      .then(() => {
+        setUserData(initialState);
+        navigation.navigate("Home");
+      })
+      .catch((err) => {
+        console.log(err.message);
+        alert(err.message);
+      });
   };
 
   return (
