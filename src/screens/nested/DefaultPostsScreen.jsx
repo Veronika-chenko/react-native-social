@@ -21,7 +21,7 @@ export const DefaultPostsScreen = ({ navigation }) => {
   useEffect(() => {
     (async () => {
       const allPosts = await getPosts();
-      // console.log(21, allPosts);
+      console.log(24, allPosts);
       // setPosts((prev) => [...prev, ...allPosts]);
       setPosts([...allPosts]);
     })();

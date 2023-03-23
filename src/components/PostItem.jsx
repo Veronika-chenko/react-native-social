@@ -22,7 +22,9 @@ export const PostItem = ({ item, navigation }) => {
             color="#BDBDBD"
             style={styles.commentIcon}
           />
-          <Text style={styles.commentQuantity}>{comments.length}</Text>
+          <Text style={styles.commentQuantity}>
+            {comments && comments.length}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{ flexDirection: "row" }}

@@ -18,7 +18,10 @@ import { TextInput } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/auth/authSelectors";
-import { uploadCommnetToDb } from "../../firebase/helpers/commentsManager";
+import {
+  addCommentToPost,
+  getAllComments,
+} from "../../firebase/helpers/commentsManager";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -34,6 +37,15 @@ export const CommentsScreen = ({ route }) => {
   const [fontsLoaded] = useFonts({
     "Roboto-Regular": require("../../../assets/fonts/Roboto/Roboto-Regular.ttf"),
   });
+
+  useEffect(() => {
+    (async () => {
+      const allComments = getAllComments(postId);
+      console.log(44, allComments);
+      setAllComments([...allComments]);
+    })();
+  }, []);
+
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
       await SplashScreen.hideAsync();
@@ -61,7 +73,7 @@ export const CommentsScreen = ({ route }) => {
       createdAt: new Date(),
     };
     // setComment("");
-    await uploadCommnetToDb(newComment, postId);
+    await addCommentToPost(newComment, postId);
   };
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
@@ -119,6 +131,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     backgroundColor: "#fff",
     paddingTop: 32,
+    paddingHorizontal: 16,
   },
   innerBox: {
     alignItems: "center",
@@ -170,13 +183,13 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 50,
     justifyContent: "flex-end",
+    marginHorizontal: 16,
     borderWidth: 1,
     borderColor: "#E8E8E8",
     backgroundColor: "#F6F6F6",
     borderRadius: 100,
   },
   input: {
-    // width,
     paddingVertical: 16,
     paddingLeft: 16,
     paddingRight: 50,
