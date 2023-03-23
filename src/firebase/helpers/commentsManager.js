@@ -6,9 +6,9 @@ export const addCommentToPost = async (comments, postId) => {
     try {   
         console.log("pre comments db");
         const postRef = await doc(collection(db, "posts"), postId);
-        console.log("postRef: ", postRef)
+        // console.log("postRef: ", postRef)
         const commentRef = await addDoc(collection(postRef, 'comments'), comments);
-        console.log("commentsRef: ", commentRef)
+        // console.log("commentsRef: ", commentRef)
         
         console.log("Document comment written with ID: ", commentRef);
     } catch (error) {
@@ -19,21 +19,16 @@ export const addCommentToPost = async (comments, postId) => {
 export const getAllComments = async (postId) => {
     let array = []
     try {
-        // const postsRef = collection(db, "posts");
-        // const querySnapshot = await getDocs(postsRef);
         const postRef = await doc(collection(db, "posts"), postId);
-        // const commentRef = await doc(collection(postRef, "comments"), postId);
         const commentRef = await getDocs(collection(postRef, "comments"));
-        console.log("all commentRef:", commentRef)
-
+        // console.log("all commentRef:", commentRef.docs.length)
+        // if(commentRef)
         commentRef.forEach((doc) => {
             console.log(doc.id, " => ", {...doc.data()});
-            array.push({postId: doc.id, ...doc.data()})
+            array.push({ commentId: doc.id, ...doc.data() })
         });
 
-        // console.log(28, array)
-        // console.log(28, commentRef)
-        return array
+        return array;
     } catch (error) {
         console.log("err in getComments: ", error.message)
     }

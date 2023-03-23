@@ -22,6 +22,7 @@ import {
   addCommentToPost,
   getAllComments,
 } from "../../firebase/helpers/commentsManager";
+import { PostComment } from "../../components/PostComment";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -40,8 +41,8 @@ export const CommentsScreen = ({ route }) => {
 
   useEffect(() => {
     (async () => {
-      const allComments = getAllComments(postId);
-      console.log(44, allComments);
+      const allComments = await getAllComments(postId);
+      // console.log(44, allComments);
       setAllComments([...allComments]);
     })();
   }, []);
@@ -62,9 +63,10 @@ export const CommentsScreen = ({ route }) => {
   };
 
   const handleSubmit = async () => {
+    keyboardHide();
     if (!comment) return;
     const newComment = {
-      comment: comment.trim(),
+      text: comment.trim(),
       postId,
       user: {
         userId,
@@ -77,32 +79,28 @@ export const CommentsScreen = ({ route }) => {
   };
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-      <TouchableWithoutFeedback onPress={keyboardHide}>
+      <TouchableWithoutFeedback onPress={keyboardHide} style={{ flex: 1 }}>
         <View style={styles.container} onLayout={onLayoutRootView}>
           <View style={styles.innerBox}>
             {/* image */}
-            <Image source={postPhoto} style={styles.postImage} />
-            {/* comment list */}
-            <View style={{ paddingHorizontal: 16 }}>
-              <View style={styles.commentItem}>
-                <Image style={styles.commentAvatar} />
-                <View style={styles.commentTextWrap}>
-                  <Text style={styles.commentText}>
-                    Really love your most recent photo. I’ve been trying to
-                    capture the same thing for a few months and would love some
-                    tips!
-                  </Text>
-                  <Text style={styles.commetsDate}>09 июня, 2020 | 08:40</Text>
-                </View>
-              </View>
+            <View style={styles.imageWrap}>
+              <Image source={postPhoto} style={styles.postImage} />
             </View>
+            {/* comment list */}
+            <FlatList
+              // style={{ width: "100%", borderWidth: 1 }}
+              style={{ width: "100%" }}
+              data={allComments}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => <PostComment comment={item} />}
+            ></FlatList>
           </View>
           {/* input */}
           <View
             style={{
               ...styles.inputWrap,
               position: isShowKeyboard ? "absolute" : "absolute",
-              bottom: isShowKeyboard ? -100 : 0,
+              bottom: isShowKeyboard ? -100 : 8,
             }}
           >
             <TextInput
@@ -135,10 +133,14 @@ const styles = StyleSheet.create({
   },
   innerBox: {
     alignItems: "center",
-    paddingHorizontal: 16,
+    // borderWidth: 1,
+  },
+  imageWrap: {
+    width: "100%",
   },
   postImage: {
     height: 240,
+    width: "100%",
     // resizeMode: "cover",
     marginBottom: 32,
 

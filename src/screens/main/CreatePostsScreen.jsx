@@ -111,14 +111,13 @@ export const CreatePostsScreen = ({ navigation }) => {
         userName: nickname,
         photoURI: newPhotoURI,
         location: location,
-        // comments: [],
       };
       // call postManager fn
       await uploadPostToDb(newPost);
+      navigation.navigate("DefaultPosts");
     } catch (error) {
       console.log("error on created", error.message);
     }
-    navigation.navigate("DefaultPosts");
   };
 
   const keyboardHide = () => {
@@ -128,11 +127,8 @@ export const CreatePostsScreen = ({ navigation }) => {
 
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-      <TouchableWithoutFeedback
-        onPress={keyboardHide}
-        style={{ flex: 1, borderWidth: 1 }}
-      >
-        <View style={{ ...styles.container }}>
+      <TouchableWithoutFeedback onPress={keyboardHide} style={{ flex: 1 }}>
+        <View style={styles.container}>
           <View style={{ marginTop: isShowKeyboard ? -32 : 32 }}>
             <Camera
               style={styles.camera}
