@@ -10,6 +10,7 @@ import { PostItem } from "../../components";
 import { getPosts } from "../../firebase/helpers/postsManager";
 
 import userPhoto from "../../../assets/images/user-photo.png";
+import { getAllComments } from "../../firebase/helpers/commentsManager";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -21,7 +22,7 @@ export const DefaultPostsScreen = ({ navigation }) => {
   useEffect(() => {
     (async () => {
       const allPosts = await getPosts();
-      console.log(24, allPosts);
+      // console.log(24, allPosts);
       // setPosts((prev) => [...prev, ...allPosts]);
       setPosts([...allPosts]);
     })();

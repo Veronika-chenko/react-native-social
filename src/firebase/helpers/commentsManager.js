@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs, getDoc, doc } from "firebase/firestore";
+import { addDoc, collection, getDocs, doc } from "firebase/firestore";
 import { db } from "../config";
 
 export const addCommentToPost = async (comments, postId) => {
@@ -21,8 +21,7 @@ export const getAllComments = async (postId) => {
     try {
         const postRef = await doc(collection(db, "posts"), postId);
         const commentRef = await getDocs(collection(postRef, "comments"));
-        // console.log("all commentRef:", commentRef.docs.length)
-        // if(commentRef)
+
         commentRef.forEach((doc) => {
             console.log(doc.id, " => ", {...doc.data()});
             array.push({ commentId: doc.id, ...doc.data() })

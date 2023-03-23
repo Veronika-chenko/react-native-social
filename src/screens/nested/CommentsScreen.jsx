@@ -9,12 +9,12 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
+  TextInput,
 } from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
-import postPhoto from "../../../assets/images/post.jpg";
-import { TextInput } from "react-native-gesture-handler";
+// import postPhoto from "../../../assets/images/post.jpg";
 import { AntDesign } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/auth/authSelectors";
@@ -27,14 +27,13 @@ import { PostComment } from "../../components/PostComment";
 SplashScreen.preventAutoHideAsync();
 
 export const CommentsScreen = ({ route }) => {
-  const { postId } = route.params;
+  const { postId, photoURI } = route.params;
   const { userId, nickname } = useSelector(selectUser);
-  // console.log("user:", userId, nickname);
-  // console.log("in comments:", postId);
-  const [comment, setComment] = useState("");
+
+  const [newComment, setNewComment] = useState("");
   const [allComments, setAllComments] = useState([]);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  // console.log("route.params:", route.params.photo.uri)
+
   const [fontsLoaded] = useFonts({
     "Roboto-Regular": require("../../../assets/fonts/Roboto/Roboto-Regular.ttf"),
   });
@@ -64,9 +63,9 @@ export const CommentsScreen = ({ route }) => {
 
   const handleSubmit = async () => {
     keyboardHide();
-    if (!comment) return;
+    if (!newComment) return;
     const newComment = {
-      text: comment.trim(),
+      text: newComment.trim(),
       postId,
       user: {
         userId,
@@ -84,11 +83,13 @@ export const CommentsScreen = ({ route }) => {
           <View style={styles.innerBox}>
             {/* image */}
             <View style={styles.imageWrap}>
-              <Image source={postPhoto} style={styles.postImage} />
+              <Image source={{ uri: photoURI }} style={styles.postImage} />
             </View>
             {/* comment list */}
+            {allComments.length === 0 && (
+              <Text style={{ marginRight: "auto" }}>No comments yet</Text>
+            )}
             <FlatList
-              // style={{ width: "100%", borderWidth: 1 }}
               style={{ width: "100%" }}
               data={allComments}
               keyExtractor={(item, index) => index.toString()}
@@ -105,7 +106,7 @@ export const CommentsScreen = ({ route }) => {
           >
             <TextInput
               style={styles.input}
-              onChangeText={setComment}
+              onChangeText={setNewComment}
               placeholder="Коментувати..."
               onFocus={() => setIsShowKeyboard(true)}
             />
