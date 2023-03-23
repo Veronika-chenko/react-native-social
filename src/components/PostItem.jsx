@@ -4,7 +4,6 @@ import { Feather } from "@expo/vector-icons";
 
 export const PostItem = ({ item, navigation }) => {
   const { postId, photoURI, title, region, location, comments } = item;
-  // console.log(77777777777, item);
 
   return (
     <View style={styles.postItem}>

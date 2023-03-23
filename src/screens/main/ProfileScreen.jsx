@@ -18,7 +18,6 @@ import union from "../../../assets/images/union.png";
 import cross from "../../../assets/images/cross.png";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/auth/authSelectors";
-import { getUserPosts } from "../../firebase/helpers/postsManager";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import { PostItem } from "../../components";
@@ -70,7 +69,6 @@ export const ProfileScreen = ({ navigation }) => {
   }
 
   return (
-    // <Text>ProfileScreen</Text>
     <View style={styles.container} onLayout={onLayoutRootView}>
       <ImageBackground source={mountainsImage} style={styles.bgImage}>
         <View style={styles.innerBox}>
@@ -116,13 +114,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    // justifyContent: 'center',
-    // alignItems: 'center',
   },
   bgImage: {
     flex: 1,
     resizeMode: "cover",
-    // justifyContent: 'flex-end',
     marginBottom: -65,
   },
   innerBox: {

@@ -41,7 +41,7 @@ export const CommentsScreen = ({ route }) => {
   useEffect(() => {
     (async () => {
       const allComments = await getAllComments(postId);
-      // console.log(44, allComments);
+
       setAllComments([...allComments]);
     })();
   }, []);
@@ -73,7 +73,8 @@ export const CommentsScreen = ({ route }) => {
       },
       createdAt: new Date(),
     };
-    // setComment("");
+    setNewComment("");
+
     await addCommentToPost(newComment, postId);
   };
   return (
@@ -134,7 +135,6 @@ const styles = StyleSheet.create({
   },
   innerBox: {
     alignItems: "center",
-    // borderWidth: 1,
   },
   imageWrap: {
     width: "100%",
@@ -142,7 +142,6 @@ const styles = StyleSheet.create({
   postImage: {
     height: 240,
     width: "100%",
-    // resizeMode: "cover",
     marginBottom: 32,
 
     borderRadius: 8,
@@ -150,7 +149,6 @@ const styles = StyleSheet.create({
   },
   commentItem: {
     flexDirection: "row",
-    // marginHorizontal: 16,
     paddingHorizontal: 16,
     justifyContent: "center",
   },
@@ -163,7 +161,6 @@ const styles = StyleSheet.create({
   },
   commentTextWrap: {
     alignItems: "flex-end",
-    // width: 300,
     padding: 16,
     backgroundColor: "rgba(0, 0, 0, 0.03)",
     borderBottomRightRadius: 6,

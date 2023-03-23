@@ -3,31 +3,26 @@ import { db } from "../config";
 
 export const addCommentToPost = async (comments, postId) => {
     if (!comments) return;
-    try {   
-        console.log("pre comments db");
+
+    try {
         const postRef = await doc(collection(db, "posts"), postId);
-        // console.log("postRef: ", postRef)
-        const commentRef = await addDoc(collection(postRef, 'comments'), comments);
-        // console.log("commentsRef: ", commentRef)
-        
-        console.log("Document comment written with ID: ", commentRef);
+        await addDoc(collection(postRef, 'comments'), comments);
     } catch (error) {
+        alert("Something went wrong")
       console.log("!!!!coments", error.message);
     }
 }
 
 export const getAllComments = async (postId) => {
-    // console.log("here postId:", postId)
     let array = []
     try {
         const postRef = await doc(collection(db, "posts"), postId);
         const commentRef = await getDocs(collection(postRef, "comments"));
 
         commentRef.forEach((doc) => {
-            // console.log(doc.id, " => ", {...doc.data()});
             array.push({ commentId: doc.id, ...doc.data() })
         });
-        // console.log("array:", array)
+
         return array;
     } catch (error) {
         console.log("err in getComments: ", error.message)
