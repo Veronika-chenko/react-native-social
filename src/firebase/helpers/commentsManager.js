@@ -17,16 +17,17 @@ export const addCommentToPost = async (comments, postId) => {
 }
 
 export const getAllComments = async (postId) => {
+    // console.log("here postId:", postId)
     let array = []
     try {
         const postRef = await doc(collection(db, "posts"), postId);
         const commentRef = await getDocs(collection(postRef, "comments"));
 
         commentRef.forEach((doc) => {
-            console.log(doc.id, " => ", {...doc.data()});
+            // console.log(doc.id, " => ", {...doc.data()});
             array.push({ commentId: doc.id, ...doc.data() })
         });
-
+        // console.log("array:", array)
         return array;
     } catch (error) {
         console.log("err in getComments: ", error.message)
