@@ -7,7 +7,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { selectUser } from "../../redux/auth/authSelectors";
 
 import { PostItem } from "../../components";
-import { getPosts } from "../../firebase/postsManager";
+import { getPosts } from "../../firebase/helpers/postsManager";
 
 import userPhoto from "../../../assets/images/user-photo.png";
 

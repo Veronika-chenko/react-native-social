@@ -1,6 +1,6 @@
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
-import { storage } from "./config";
+import { storage } from "../config";
 
 export const uploadImage = async (photoURI) => {
     if (!photoURI) return;

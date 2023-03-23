@@ -3,7 +3,8 @@ import PropTypes from "prop-types";
 import { Feather } from "@expo/vector-icons";
 
 export const PostItem = ({ item, navigation }) => {
-const { photoURI, title, region, location, comments } = item;
+  const { postId, photoURI, title, region, location, comments } = item;
+  // console.log("item:", item);
 
   return (
     <View style={styles.postItem}>
@@ -13,7 +14,7 @@ const { photoURI, title, region, location, comments } = item;
         <TouchableOpacity
           style={styles.postCommentWrap}
           activeOpacity={0.7}
-          onPress={() => navigation.navigate("CommentsScreen")}
+          onPress={() => navigation.navigate("CommentsScreen", { postId })}
         >
           <Feather
             name="message-circle"

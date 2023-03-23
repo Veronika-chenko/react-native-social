@@ -16,9 +16,9 @@ import { FontAwesome5, Feather } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import "react-native-get-random-values";
 import { PostInput, SubmitButton } from "../../components";
-import { uploadImage } from "../../firebase/storeManager";
+import { uploadImage } from "../../firebase/helpers/storeManager";
 // firestore
-import { uploadPostToDb } from "../../firebase/postsManager";
+import { uploadPostToDb } from "../../firebase/helpers/postsManager";
 // get current user info from redux
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/auth/authSelectors";
@@ -99,22 +99,22 @@ export const CreatePostsScreen = ({ navigation }) => {
       alert("all fields are required");
       return;
     }
-    
+
     try {
       const newPhotoURI = await uploadImage(photoURI);
       const location = await getUserLocation();
 
       console.log("after photo and location");
-      const data = {
+      const newPost = {
         ...postData,
         userId: userId,
         userName: nickname,
         photoURI: newPhotoURI,
         location: location,
-        comments: [],
+        // comments: [],
       };
       // call postManager fn
-      await uploadPostToDb(data);
+      await uploadPostToDb(newPost);
     } catch (error) {
       console.log("error on created", error.message);
     }
