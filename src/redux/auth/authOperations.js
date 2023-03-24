@@ -41,7 +41,6 @@ export const authSignInUser = ({email, password}) => async (dispatch, getState) 
         await signInWithEmailAndPassword(auth, email, password);
         // витаскуємо id та displayName
         const { uid, displayName, photoURL } = auth.currentUser;
-        // console.log(43, uid, "+", displayName)
         // обновляємо користувача в redux
         dispatch(authSlice.actions.updateUserProfile({
             userId: uid,
@@ -49,14 +48,14 @@ export const authSignInUser = ({email, password}) => async (dispatch, getState) 
             email: email,
             avatar: photoURL,
         }))
-        // console.log("user in log:", user)
+
     } catch (error) {
         if (error.message.includes('auth/user-not-found')) {
             alert('user not found');
             return;
         }
         if (error.message.includes('auth/invalid-email')) {
-            alert('invalid emai');
+            alert('invalid email');
             return;
         }
         console.log('error:', error.message)

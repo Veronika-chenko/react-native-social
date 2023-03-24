@@ -75,9 +75,9 @@ export const LoginScreen = ({ navigation }) => {
     const { email, password } = userData;
     if (!email || !password) return;
     dispatch(authSignInUser(userData))
-      .then(() => {
+      .then((user) => {
         setUserData(initialState);
-        navigation.navigate("Home");
+        if (user) navigation.navigate("Home");
       })
       .catch((err) => {
         console.log(err.message);

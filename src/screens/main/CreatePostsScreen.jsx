@@ -205,7 +205,7 @@ export const CreatePostsScreen = ({ navigation }) => {
           <View
             style={{
               ...styles.footer,
-              bottom: isShowKeyboard ? "-100%" : 15,
+              bottom: isShowKeyboard ? "-1100%" : 15,
             }}
           >
             <TouchableOpacity
