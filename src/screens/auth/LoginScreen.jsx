@@ -77,13 +77,12 @@ export const LoginScreen = ({ navigation }) => {
     dispatch(authSignInUser(userData))
       .then(() => {
         setUserData(initialState);
+        navigation.navigate("Home");
       })
       .catch((err) => {
         console.log(err.message);
         alert(err.message);
       });
-
-    navigation.navigate("Home");
   };
 
   return (
