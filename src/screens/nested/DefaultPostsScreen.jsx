@@ -17,7 +17,8 @@ SplashScreen.preventAutoHideAsync();
 export const DefaultPostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
   // get current user info from redux:
-  const { email, nickname } = useSelector(selectUser);
+  const { email, nickname, avatar } = useSelector(selectUser);
+  console.log("userData in DefaultScreen", email, "/", nickname, "/", avatar);
 
   useEffect(() => {
     (async () => {
@@ -48,7 +49,7 @@ export const DefaultPostsScreen = ({ navigation }) => {
   return (
     <View style={styles.container} onLayout={onLayoutRootView}>
       <View style={styles.userItem}>
-        <Image source={userPhoto} style={styles.userPhoto} />
+        <Image source={{ uri: avatar }} style={styles.userPhoto} />
         <View>
           <Text style={styles.userName}>{nickname}</Text>
           <Text style={styles.userEmail}>{email}</Text>
@@ -81,6 +82,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     marginRight: 8,
+    borderRadius: 16,
   },
   userName: {
     fontFamily: "Roboto-Bold",

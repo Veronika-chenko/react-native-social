@@ -88,7 +88,7 @@ export const CommentsScreen = ({ route }) => {
             </View>
             {/* comment list */}
             {allComments.length === 0 && (
-              <Text style={{ marginRight: "auto" }}>No comments yet</Text>
+              <Text style={styles.infoMessage}>No comments yet</Text>
             )}
             <FlatList
               style={{ width: "100%" }}
@@ -204,5 +204,9 @@ const styles = StyleSheet.create({
     height: 34,
     borderRadius: 50,
     backgroundColor: "#FF6C00",
+  },
+  infoMessage: {
+    marginRight: "auto",
+    fontSize: 16,
   },
 });

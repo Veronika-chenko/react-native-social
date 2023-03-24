@@ -25,10 +25,13 @@ import cross from "../../../assets/images/cross.png";
 import userPhoto from "../../../assets/images/user-photo.png"; // help photo
 // util components
 import { AuthInput, SubmitButton } from "../../components";
+import { ImageUpload } from "../../components/ImageUpload";
+import { uploadImage } from "../../firebase/helpers/storeManager";
 
 SplashScreen.preventAutoHideAsync();
 
 const initialState = {
+  avatar: "",
   login: "",
   email: "",
   password: "",
@@ -36,7 +39,7 @@ const initialState = {
 
 export const RegistrationScreen = ({ navigation }) => {
   const [userData, setUserData] = useState(initialState);
-  const [isPhoto, setIsPhoto] = useState(false);
+  const [avatar, setAvatar] = useState(false);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
 
   const [fontsLoaded] = useFonts({
@@ -63,15 +66,24 @@ export const RegistrationScreen = ({ navigation }) => {
 
   const handleSubmit = async () => {
     const { login, email, password } = userData;
-    if (!login || !email || !password) return;
-    
-    dispatch(authSignUpUser(userData))
+
+    if (!login || !email || !password || !avatar) {
+      alert("All fields are required");
+      return;
+    }
+
+    dispatch(authSignUpUser({ ...userData, avatar: avatar }))
       .then(() => {
         setUserData(initialState);
         navigation.navigate("Home");
-
       })
       .catch((err) => alert(err.message));
+  };
+
+  const passAvatar = async (avatarURI) => {
+    console.log("avatarURI:", avatarURI);
+    const storedAvatar = await uploadImage(avatarURI, "avatars");
+    setAvatar(storedAvatar);
   };
 
   return (
@@ -87,7 +99,8 @@ export const RegistrationScreen = ({ navigation }) => {
               onLayout={onLayoutRootView}
             >
               <View style={{ paddingBottom: 78 }}>
-                <View style={styles.photoWrap}>
+                <ImageUpload passAvatar={passAvatar} />
+                {/* <View style={styles.photoWrap}>
                   {isPhoto ? (
                     <>
                       <Image source={userPhoto} />
@@ -111,9 +124,13 @@ export const RegistrationScreen = ({ navigation }) => {
                       <Image source={union} />
                     </TouchableOpacity>
                   )}
-                </View>
+                </View> */}
 
                 <Text style={styles.title}>Реєстрація</Text>
+                {/* <View style={{ width: 120, height: 120, borderWidth: 1 }}>
+                  <ImageUpload />
+                </View> */}
+
                 <AuthInput
                   placeholder="Логін"
                   name="login"

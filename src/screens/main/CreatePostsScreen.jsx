@@ -68,6 +68,20 @@ export const CreatePostsScreen = ({ navigation }) => {
     })();
   }, []);
 
+  async function getPhotosFromDevice() {
+    const { assets } = await MediaLibrary.getAssetsAsync({
+      mediaType: "photo",
+    });
+    console.log("assets:", assets);
+    return assets;
+  }
+
+  function renderPhoto(asset) {
+    return (
+      <Image source={{ uri: asset.uri }} style={{ width: 200, height: 200 }} />
+    );
+  }
+
   if (hasCameraPermission === undefined) {
     return <Text>Requesting permissions...</Text>;
   } else if (!hasCameraPermission) {
@@ -101,7 +115,7 @@ export const CreatePostsScreen = ({ navigation }) => {
     }
 
     try {
-      const newPhotoURI = await uploadImage(photoURI);
+      const newPhotoURI = await uploadImage(photoURI, "images");
       const location = await getUserLocation();
 
       console.log("after photo and location");
@@ -163,6 +177,10 @@ export const CreatePostsScreen = ({ navigation }) => {
               </View>
             </Camera>
             <Text style={styles.helpText}>Завантажте фото</Text>
+            {/* <TouchableOpacity onPress={getPhotosFromDevice}>
+              <Text style={styles.helpText}>Завантажте фото</Text>
+            </TouchableOpacity> */}
+
             <PostInput
               placeholder="Назва..."
               name="title"

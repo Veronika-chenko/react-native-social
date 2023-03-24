@@ -25,7 +25,9 @@ import { PostItem } from "../../components";
 SplashScreen.preventAutoHideAsync();
 
 export const ProfileScreen = ({ navigation }) => {
-  const { userId } = useSelector(selectUser);
+  // const { email, nickname, avatar } = useSelector(selectUser);
+  // console.log("userData in DefaultScreen", email, "/", nickname, "/", avatar);
+  const { userId, avatar } = useSelector(selectUser);
   const [isPhoto, setIsPhoto] = useState(false);
   const [userPosts, setUserPosts] = useState([]);
   const [fontsLoaded] = useFonts({
@@ -73,7 +75,8 @@ export const ProfileScreen = ({ navigation }) => {
       <ImageBackground source={mountainsImage} style={styles.bgImage}>
         <View style={styles.innerBox}>
           <View style={styles.photoWrap}>
-            {isPhoto ? (
+            <Image source={{ uri: avatar }} style={styles.userPhoto} />
+            {/* {isPhoto ? (
               <>
                 <Image source={userPhoto} />
                 <TouchableOpacity
@@ -92,10 +95,15 @@ export const ProfileScreen = ({ navigation }) => {
               >
                 <Image source={union} />
               </TouchableOpacity>
-            )}
+            )} */}
           </View>
           <Text style={styles.profileName}>Natali Romanova</Text>
           <View style={{ paddingHorizontal: 16 }}>
+            {userPosts.length === 0 && (
+              <Text style={styles.infoMessage}>
+                You haven't created any posts yet
+              </Text>
+            )}
             <FlatList
               data={userPosts}
               keyExtractor={(item, index) => index.toString()}
@@ -138,6 +146,11 @@ const styles = StyleSheet.create({
     height: 120,
     borderRadius: 16,
     backgroundColor: "#F6F6F6",
+    overflow: "hidden",
+  },
+  userPhoto: {
+    width: "100%",
+    height: "100%",
   },
   addPhotoBtn: {
     position: "absolute",
@@ -160,5 +173,9 @@ const styles = StyleSheet.create({
     fontSize: 30,
     lineHeight: 35,
     color: "#212121",
+  },
+  infoMessage: {
+    marginRight: "auto",
+    fontSize: 16,
   },
 });
