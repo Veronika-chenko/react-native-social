@@ -9,22 +9,16 @@ import { selectUser } from "../../redux/auth/authSelectors";
 import { PostItem } from "../../components";
 import { getPosts } from "../../firebase/helpers/postsManager";
 
-import userPhoto from "../../../assets/images/user-photo.png";
-import { getAllComments } from "../../firebase/helpers/commentsManager";
-
 SplashScreen.preventAutoHideAsync();
 
 export const DefaultPostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
-  // get current user info from redux:
+
   const { email, nickname, avatar } = useSelector(selectUser);
-  console.log("userData in DefaultScreen", email, "/", nickname, "/", avatar);
 
   useEffect(() => {
     (async () => {
       const allPosts = await getPosts();
-      // console.log(24, allPosts);
-      // setPosts((prev) => [...prev, ...allPosts]);
       setPosts([...allPosts]);
     })();
   }, []);

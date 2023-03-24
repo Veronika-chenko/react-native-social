@@ -39,7 +39,7 @@ export const authSignUpUser = ({email, password, login, avatar}) => async (dispa
 
 export const authSignInUser = ({email, password}) => async (dispatch, getState) => { 
     try {
-        const user = await signInWithEmailAndPassword(auth, email, password);
+        await signInWithEmailAndPassword(auth, email, password);
         // витаскуємо id та displayName
         const { uid, displayName, photoURL } = auth.currentUser;
         // console.log(43, uid, "+", displayName)
@@ -72,7 +72,7 @@ export const authSignOutUser = () => async (dispatch, getState) => {
 
 export const authStateChangeUser = (user) => async (dispatch, getState) => {
     try {
-        dispatch(authSlice.actions.authStateChange({
+        dispatch(authSlice.actions.updateUserProfile({
         userId: user.uid,
         login: user.displayName,
         email: user.email,

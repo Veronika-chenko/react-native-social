@@ -5,12 +5,10 @@ import {
   View,
   ImageBackground,
   StyleSheet,
-  TouchableOpacity,
   Text,
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
-  Image,
   Dimensions,
 } from "react-native";
 // fonts
@@ -20,12 +18,9 @@ import * as SplashScreen from "expo-splash-screen";
 import { authSignUpUser } from "../../redux/auth/authOperations";
 // images
 import mountainsImage from "../../../assets/images/mountains-bg.jpg";
-import union from "../../../assets/images/union.png";
-import cross from "../../../assets/images/cross.png";
-import userPhoto from "../../../assets/images/user-photo.png"; // help photo
 // util components
 import { AuthInput, SubmitButton } from "../../components";
-import { ImageUpload } from "../../components/ImageUpload";
+import { AvatarUpload } from "../../components/AvatarUpload";
 import { uploadImage } from "../../firebase/helpers/storeManager";
 
 SplashScreen.preventAutoHideAsync();
@@ -99,37 +94,8 @@ export const RegistrationScreen = ({ navigation }) => {
               onLayout={onLayoutRootView}
             >
               <View style={{ paddingBottom: 78 }}>
-                <ImageUpload passAvatar={passAvatar} />
-                {/* <View style={styles.photoWrap}>
-                  {isPhoto ? (
-                    <>
-                      <Image source={userPhoto} />
-                      <TouchableOpacity
-                        style={{
-                          ...styles.addPhotoBtn,
-                          borderColor: "#E8E8E8",
-                        }}
-                        activeOpacity={0.7}
-                        onPress={() => setIsPhoto(false)}
-                      >
-                        <Image source={cross} />
-                      </TouchableOpacity>
-                    </>
-                  ) : (
-                    <TouchableOpacity
-                      style={styles.addPhotoBtn}
-                      activeOpacity={0.7}
-                      onPress={() => setIsPhoto(true)}
-                    >
-                      <Image source={union} />
-                    </TouchableOpacity>
-                  )}
-                </View> */}
-
+                <AvatarUpload passAvatar={passAvatar} />
                 <Text style={styles.title}>Реєстрація</Text>
-                {/* <View style={{ width: 120, height: 120, borderWidth: 1 }}>
-                  <ImageUpload />
-                </View> */}
 
                 <AuthInput
                   placeholder="Логін"

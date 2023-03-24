@@ -31,12 +31,11 @@ const initialState = {
 };
 
 export const CreatePostsScreen = ({ navigation }) => {
-  let cameraRef = useRef();
+  const cameraRef = useRef();
   const { userId, nickname } = useSelector(selectUser);
-  // console.log("38 here", userId, nickname);
 
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [postData, setPostData] = useState(initialState);
+  const [newPost, setNewPost] = useState(initialState);
   //  for MediaLibrary acces gallery or camera and safe photo
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [hasMediaPermission, setHasMediaPermission] = useState();
@@ -108,7 +107,7 @@ export const CreatePostsScreen = ({ navigation }) => {
 
   // submitForm
   const handleSubmit = async () => {
-    const { title, region } = postData;
+    const { title, region } = newPost;
     if (!photoURI || !title || !region) {
       alert("all fields are required");
       return;
@@ -120,7 +119,7 @@ export const CreatePostsScreen = ({ navigation }) => {
 
       console.log("after photo and location");
       const newPost = {
-        ...postData,
+        ...newPost,
         userId: userId,
         userName: nickname,
         photoURI: newPhotoURI,
@@ -128,10 +127,13 @@ export const CreatePostsScreen = ({ navigation }) => {
       };
       // call postManager fn
       await uploadPostToDb(newPost);
-      navigation.navigate("DefaultPosts");
     } catch (error) {
       console.log("error on created", error.message);
     }
+
+    setNewPost(initialState);
+    setPhotoURI(null);
+    navigation.navigate("DefaultPosts");
   };
 
   const keyboardHide = () => {
@@ -160,19 +162,7 @@ export const CreatePostsScreen = ({ navigation }) => {
                   </TouchableOpacity>
                 )}
                 {photoURI && (
-                  <>
-                    <Image style={styles.preview} source={{ uri: photoURI }} />
-                    {/* <TouchableOpacity
-                      style={{
-                        width: 30,
-                        height: 30,
-                        backgroundColor: "#757575",
-                      }}
-                      onPress={() => setPhoto(null)}
-                    >
-                      <Text>Delete photo</Text>
-                    </TouchableOpacity> */}
-                  </>
+                  <Image style={styles.preview} source={{ uri: photoURI }} />
                 )}
               </View>
             </Camera>
@@ -184,9 +174,9 @@ export const CreatePostsScreen = ({ navigation }) => {
             <PostInput
               placeholder="Назва..."
               name="title"
-              value={postData.title}
+              value={newPost.title}
               onChangeText={(value) =>
-                setPostData((prev) => ({ ...prev, title: value }))
+                setNewPost((prev) => ({ ...prev, title: value }))
               }
               onFocus={() => setIsShowKeyboard(true)}
               marginStyle={{ marginBottom: 16 }}
@@ -194,9 +184,9 @@ export const CreatePostsScreen = ({ navigation }) => {
             <PostInput
               placeholder="Місцевість..."
               name="location"
-              value={postData.region}
+              value={newPost.region}
               onChangeText={(value) =>
-                setPostData((prev) => ({ ...prev, region: value }))
+                setNewPost((prev) => ({ ...prev, region: value }))
               }
               onFocus={() => setIsShowKeyboard(true)}
               marginStyle={{ marginBottom: isShowKeyboard ? 32 : 0 }}
@@ -208,7 +198,7 @@ export const CreatePostsScreen = ({ navigation }) => {
               style={styles.trashButton}
               activeOpacity={0.7}
               onPress={() => {
-                setPostData(initialState);
+                setNewPost(initialState);
                 setPhotoURI(null);
               }}
             >

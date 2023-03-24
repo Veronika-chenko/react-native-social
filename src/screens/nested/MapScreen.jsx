@@ -1,6 +1,5 @@
 import { StyleSheet, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import PropTypes from "prop-types";
 
 export const MapScreen = ({ route }) => {
   const { latitude, longitude } = route.params;
@@ -31,7 +30,3 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
-MapScreen.propTypes = {
-  route: PropTypes.object.isRequired,
-};

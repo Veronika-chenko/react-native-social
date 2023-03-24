@@ -5,7 +5,6 @@ import {
   ImageBackground,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 
@@ -13,9 +12,6 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
 import mountainsImage from "../../../assets/images/mountains-bg.jpg";
-import userPhoto from "../../../assets/images/user-photo.png";
-import union from "../../../assets/images/union.png";
-import cross from "../../../assets/images/cross.png";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/auth/authSelectors";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
@@ -25,10 +21,7 @@ import { PostItem } from "../../components";
 SplashScreen.preventAutoHideAsync();
 
 export const ProfileScreen = ({ navigation }) => {
-  // const { email, nickname, avatar } = useSelector(selectUser);
-  // console.log("userData in DefaultScreen", email, "/", nickname, "/", avatar);
   const { userId, avatar } = useSelector(selectUser);
-  const [isPhoto, setIsPhoto] = useState(false);
   const [userPosts, setUserPosts] = useState([]);
   const [fontsLoaded] = useFonts({
     "Roboto-Medium": require("../../../assets/fonts/Roboto/Roboto-Medium.ttf"),
@@ -76,26 +69,6 @@ export const ProfileScreen = ({ navigation }) => {
         <View style={styles.innerBox}>
           <View style={styles.photoWrap}>
             <Image source={{ uri: avatar }} style={styles.userPhoto} />
-            {/* {isPhoto ? (
-              <>
-                <Image source={userPhoto} />
-                <TouchableOpacity
-                  style={{ ...styles.addPhotoBtn, borderColor: "#E8E8E8" }}
-                  activeOpacity={0.7}
-                  onPress={() => setIsPhoto(false)}
-                >
-                  <Image source={cross} />
-                </TouchableOpacity>
-              </>
-            ) : (
-              <TouchableOpacity
-                style={styles.addPhotoBtn}
-                activeOpacity={0.7}
-                onPress={() => setIsPhoto(true)}
-              >
-                <Image source={union} />
-              </TouchableOpacity>
-            )} */}
           </View>
           <Text style={styles.profileName}>Natali Romanova</Text>
           <View style={{ paddingHorizontal: 16 }}>

@@ -9,15 +9,15 @@ export const uploadImage = async (photoURI, path) => {
     const blob = await response.blob();
     const extention = photoURI.split(".").pop();
 
-    // const imageRef = ref(storage, `images/${uuidv4()}.${extention}`);
     const imageRef = ref(storage, `${path}/${uuidv4()}.${extention}`);
 
     await uploadBytes(imageRef, blob)
       .then(() => {
-        alert("Image Uploaded");
+        return;
       })
       .catch((e) => {
         alert("Oops, something went wrong");
+        console.log("error in upload file", e.message)
       });
 
     const uploadedPhoto = await getDownloadURL(imageRef);

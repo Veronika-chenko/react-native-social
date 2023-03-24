@@ -14,7 +14,6 @@ import {
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
-// import postPhoto from "../../../assets/images/post.jpg";
 import { AntDesign } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/auth/authSelectors";
@@ -28,9 +27,9 @@ SplashScreen.preventAutoHideAsync();
 
 export const CommentsScreen = ({ route }) => {
   const { postId, photoURI } = route.params;
-  const { userId, nickname } = useSelector(selectUser);
+  const { userId, nickname, avatar } = useSelector(selectUser);
 
-  const [newComment, setNewComment] = useState("");
+  const [userComment, setUserComment] = useState("");
   const [allComments, setAllComments] = useState([]);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
 
@@ -40,9 +39,9 @@ export const CommentsScreen = ({ route }) => {
 
   useEffect(() => {
     (async () => {
-      const allComments = await getAllComments(postId);
+      const fetchedComments = await getAllComments(postId);
 
-      setAllComments([...allComments]);
+      setAllComments([...fetchedComments]);
     })();
   }, []);
 
@@ -63,17 +62,21 @@ export const CommentsScreen = ({ route }) => {
 
   const handleSubmit = async () => {
     keyboardHide();
-    if (!newComment) return;
+
+    if (!userComment) return;
+
     const newComment = {
-      text: newComment.trim(),
+      text: userComment.trim(),
       postId,
       user: {
         userId,
         nickname,
+        avatar,
       },
       createdAt: new Date(),
     };
-    setNewComment("");
+
+    setUserComment("");
 
     await addCommentToPost(newComment, postId);
   };
@@ -82,22 +85,19 @@ export const CommentsScreen = ({ route }) => {
       <TouchableWithoutFeedback onPress={keyboardHide} style={{ flex: 1 }}>
         <View style={styles.container} onLayout={onLayoutRootView}>
           <View style={styles.innerBox}>
-            {/* image */}
             <View style={styles.imageWrap}>
               <Image source={{ uri: photoURI }} style={styles.postImage} />
             </View>
-            {/* comment list */}
             {allComments.length === 0 && (
               <Text style={styles.infoMessage}>No comments yet</Text>
             )}
             <FlatList
-              style={{ width: "100%" }}
+              style={{ width: "100%", height: 240 }}
               data={allComments}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => <PostComment comment={item} />}
-            ></FlatList>
+            />
           </View>
-          {/* input */}
           <View
             style={{
               ...styles.inputWrap,
@@ -107,7 +107,8 @@ export const CommentsScreen = ({ route }) => {
           >
             <TextInput
               style={styles.input}
-              onChangeText={setNewComment}
+              value={userComment}
+              onChangeText={setUserComment}
               placeholder="Коментувати..."
               onFocus={() => setIsShowKeyboard(true)}
             />
@@ -146,37 +147,6 @@ const styles = StyleSheet.create({
 
     borderRadius: 8,
     borderWidth: 1,
-  },
-  commentItem: {
-    flexDirection: "row",
-    paddingHorizontal: 16,
-    justifyContent: "center",
-  },
-  commentAvatar: {
-    width: 28,
-    height: 28,
-    marginRight: 16,
-    borderRadius: 50,
-    backgroundColor: "#757575",
-  },
-  commentTextWrap: {
-    alignItems: "flex-end",
-    padding: 16,
-    backgroundColor: "rgba(0, 0, 0, 0.03)",
-    borderBottomRightRadius: 6,
-    borderBottomLeftRadius: 6,
-    borderTopRightRadius: 6,
-  },
-  commentText: {
-    marginBottom: 8,
-    fontFamily: "Roboto-Regular",
-    fontSize: 13,
-    color: "#212121",
-  },
-  commetsDate: {
-    fontSize: 10,
-    fontFamily: "Roboto-Regular",
-    color: "#BDBDBD",
   },
   inputWrap: {
     position: "relative",
