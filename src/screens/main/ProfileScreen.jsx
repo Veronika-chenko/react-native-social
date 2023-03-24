@@ -1,4 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import {
   FlatList,
   Image,
@@ -11,27 +13,35 @@ import {
 
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+import { Feather } from "@expo/vector-icons";
 
 import mountainsImage from "../../../assets/images/mountains-bg.jpg";
-import userPhoto from "../../../assets/images/user-photo.png";
-import union from "../../../assets/images/union.png";
-import cross from "../../../assets/images/cross.png";
-import { useSelector } from "react-redux";
+
 import { selectUser } from "../../redux/auth/authSelectors";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+
 import { db } from "../../firebase/config";
 import { PostItem } from "../../components";
+import { authSignOutUser } from "../../redux/auth/authOperations";
 
 SplashScreen.preventAutoHideAsync();
 
 export const ProfileScreen = ({ navigation }) => {
-  const { userId } = useSelector(selectUser);
-  const [isPhoto, setIsPhoto] = useState(false);
+  const { userId, avatar } = useSelector(selectUser);
   const [userPosts, setUserPosts] = useState([]);
   const [fontsLoaded] = useFonts({
     "Roboto-Medium": require("../../../assets/fonts/Roboto/Roboto-Medium.ttf"),
     "Roboto-Regular": require("../../../assets/fonts/Roboto/Roboto-Regular.ttf"),
   });
+
+  const dispatch = useDispatch();
+
+  const handleLogOut = () => {
+    dispatch(authSignOutUser())
+      .then(() => {
+        navigation.navigate("Login");
+      })
+      .catch((err) => alert(err.message));
+  };
 
   const getUserPosts = () => {
     try {
@@ -73,30 +83,24 @@ export const ProfileScreen = ({ navigation }) => {
       <ImageBackground source={mountainsImage} style={styles.bgImage}>
         <View style={styles.innerBox}>
           <View style={styles.photoWrap}>
-            {isPhoto ? (
-              <>
-                <Image source={userPhoto} />
-                <TouchableOpacity
-                  style={{ ...styles.addPhotoBtn, borderColor: "#E8E8E8" }}
-                  activeOpacity={0.7}
-                  onPress={() => setIsPhoto(false)}
-                >
-                  <Image source={cross} />
-                </TouchableOpacity>
-              </>
-            ) : (
-              <TouchableOpacity
-                style={styles.addPhotoBtn}
-                activeOpacity={0.7}
-                onPress={() => setIsPhoto(true)}
-              >
-                <Image source={union} />
-              </TouchableOpacity>
-            )}
+            <Image source={{ uri: avatar }} style={styles.userPhoto} />
           </View>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles.logoutBtn}
+            onPress={handleLogOut}
+          >
+            <Feather name="log-out" size={24} color="#BDBDBD" />
+          </TouchableOpacity>
           <Text style={styles.profileName}>Natali Romanova</Text>
           <View style={{ paddingHorizontal: 16 }}>
+            {userPosts.length === 0 && (
+              <Text style={styles.infoMessage}>
+                You haven't created any posts yet
+              </Text>
+            )}
             <FlatList
+              style={styles.postList}
               data={userPosts}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
@@ -121,6 +125,7 @@ const styles = StyleSheet.create({
     marginBottom: -65,
   },
   innerBox: {
+    position: "relative",
     flex: 1,
     marginTop: 103,
     paddingTop: 92,
@@ -128,6 +133,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
+  },
+  logoutBtn: {
+    position: "absolute",
+    top: 22,
+    right: 16,
   },
   photoWrap: {
     position: "absolute",
@@ -138,6 +148,11 @@ const styles = StyleSheet.create({
     height: 120,
     borderRadius: 16,
     backgroundColor: "#F6F6F6",
+    overflow: "hidden",
+  },
+  userPhoto: {
+    width: "100%",
+    height: "100%",
   },
   addPhotoBtn: {
     position: "absolute",
@@ -160,5 +175,12 @@ const styles = StyleSheet.create({
     fontSize: 30,
     lineHeight: 35,
     color: "#212121",
+  },
+  infoMessage: {
+    marginRight: "auto",
+    fontSize: 16,
+  },
+  postList: {
+    height: 430,
   },
 });

@@ -5,12 +5,10 @@ import {
   View,
   ImageBackground,
   StyleSheet,
-  TouchableOpacity,
   Text,
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
-  Image,
   Dimensions,
 } from "react-native";
 // fonts
@@ -20,15 +18,15 @@ import * as SplashScreen from "expo-splash-screen";
 import { authSignUpUser } from "../../redux/auth/authOperations";
 // images
 import mountainsImage from "../../../assets/images/mountains-bg.jpg";
-import union from "../../../assets/images/union.png";
-import cross from "../../../assets/images/cross.png";
-import userPhoto from "../../../assets/images/user-photo.png"; // help photo
 // util components
 import { AuthInput, SubmitButton } from "../../components";
+import { AvatarUpload } from "../../components/AvatarUpload";
+import { uploadImage } from "../../firebase/helpers/storeManager";
 
 SplashScreen.preventAutoHideAsync();
 
 const initialState = {
+  avatar: "",
   login: "",
   email: "",
   password: "",
@@ -36,7 +34,7 @@ const initialState = {
 
 export const RegistrationScreen = ({ navigation }) => {
   const [userData, setUserData] = useState(initialState);
-  const [isPhoto, setIsPhoto] = useState(false);
+  const [avatar, setAvatar] = useState(false);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
 
   const [fontsLoaded] = useFonts({
@@ -63,15 +61,24 @@ export const RegistrationScreen = ({ navigation }) => {
 
   const handleSubmit = async () => {
     const { login, email, password } = userData;
-    if (!login || !email || !password) return;
-    
-    dispatch(authSignUpUser(userData))
+
+    if (!login || !email || !password || !avatar) {
+      alert("All fields are required");
+      return;
+    }
+
+    dispatch(authSignUpUser({ ...userData, avatar: avatar }))
       .then(() => {
         setUserData(initialState);
         navigation.navigate("Home");
-
       })
       .catch((err) => alert(err.message));
+  };
+
+  const passAvatar = async (avatarURI) => {
+    console.log("avatarURI:", avatarURI);
+    const storedAvatar = await uploadImage(avatarURI, "avatars");
+    setAvatar(storedAvatar);
   };
 
   return (
@@ -87,33 +94,9 @@ export const RegistrationScreen = ({ navigation }) => {
               onLayout={onLayoutRootView}
             >
               <View style={{ paddingBottom: 78 }}>
-                <View style={styles.photoWrap}>
-                  {isPhoto ? (
-                    <>
-                      <Image source={userPhoto} />
-                      <TouchableOpacity
-                        style={{
-                          ...styles.addPhotoBtn,
-                          borderColor: "#E8E8E8",
-                        }}
-                        activeOpacity={0.7}
-                        onPress={() => setIsPhoto(false)}
-                      >
-                        <Image source={cross} />
-                      </TouchableOpacity>
-                    </>
-                  ) : (
-                    <TouchableOpacity
-                      style={styles.addPhotoBtn}
-                      activeOpacity={0.7}
-                      onPress={() => setIsPhoto(true)}
-                    >
-                      <Image source={union} />
-                    </TouchableOpacity>
-                  )}
-                </View>
-
+                <AvatarUpload passAvatar={passAvatar} />
                 <Text style={styles.title}>Реєстрація</Text>
+
                 <AuthInput
                   placeholder="Логін"
                   name="login"

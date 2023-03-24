@@ -1,24 +1,32 @@
 import { Image, StyleSheet, Text, View } from "react-native";
+import { Feather } from "@expo/vector-icons";
+import PropTypes from "prop-types";
+import { formatDate } from "../helpers/formatDate";
 
 export const PostComment = ({ comment }) => {
-  // const data = route.params;
+  if (!comment) return;
+
   const {
     text,
     createdAt,
-    user: { nickname },
+    user: { nickname, avatar },
   } = comment;
+
   return (
     <View style={styles.commentItem}>
-      <Image style={styles.commentAvatar} />
+      {avatar && (
+        <Image style={styles.commentAvatar} source={{ uri: avatar }} />
+      )}
+      {!avatar && (
+        <View style={styles.commentAvatar}>
+          <Feather name="user" size={24} color="black" />
+        </View>
+      )}
       <View style={styles.commentTextWrap}>
-        {/* <Text style={styles.commentText}>
-          Really love your most recent photo. I’ve been trying to capture the
-          same thing for a few months and would love some tips!
-        </Text> */}
         <Text style={styles.commentText}>
           {nickname}: {text}
         </Text>
-        <Text style={styles.commetsDate}>09 июня, 2020 | 08:40</Text>
+        <Text style={styles.commetsDate}>{formatDate(createdAt)}</Text>
       </View>
     </View>
   );
@@ -34,7 +42,8 @@ const styles = StyleSheet.create({
     height: 28,
     marginRight: 16,
     borderRadius: 50,
-    backgroundColor: "#757575",
+    justifyContent: "center",
+    alignItems: "center",
   },
   commentTextWrap: {
     width: "90%",
@@ -55,3 +64,11 @@ const styles = StyleSheet.create({
     marginLeft: "auto",
   },
 });
+
+PostComment.propTypes = {
+  comment: PropTypes.shape({
+    text: PropTypes.string.isRequired,
+    createdAt: PropTypes.object.isRequired,
+    user: PropTypes.object.isRequired,
+  }),
+};

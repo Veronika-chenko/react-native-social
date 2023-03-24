@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 // main screens
 import { PostsScreen } from "./PostsScreen";
@@ -29,14 +29,10 @@ export const Home = ({ navigation }) => {
         },
       }}
     >
-      {/* 1 */}
       <BottomMenu.Screen
         name="Posts"
         component={PostsScreen}
         options={{
-          // tabBarStyle: {
-          //   display: "none",
-          // },
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <SimpleLineIcons
@@ -47,7 +43,6 @@ export const Home = ({ navigation }) => {
           ),
         }}
       />
-      {/* 2 */}
       <BottomMenu.Screen
         name="Create Post"
         component={CreatePostsScreen}
@@ -84,7 +79,6 @@ export const Home = ({ navigation }) => {
           ),
         }}
       />
-      {/* 3 */}
       <BottomMenu.Screen
         name="Profile"
         component={ProfileScreen}
@@ -102,12 +96,3 @@ export const Home = ({ navigation }) => {
     </BottomMenu.Navigator>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});

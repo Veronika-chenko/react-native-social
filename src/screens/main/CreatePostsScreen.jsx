@@ -10,7 +10,7 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 
-import { Camera, CameraType } from "expo-camera";
+import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import { FontAwesome5, Feather } from "@expo/vector-icons";
 import * as Location from "expo-location";
@@ -22,6 +22,8 @@ import { uploadPostToDb } from "../../firebase/helpers/postsManager";
 // get current user info from redux
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/auth/authSelectors";
+//
+import * as ImagePicker from "expo-image-picker";
 
 const initialState = {
   photoURI: null,
@@ -31,15 +33,13 @@ const initialState = {
 };
 
 export const CreatePostsScreen = ({ navigation }) => {
-  let cameraRef = useRef();
+  const cameraRef = useRef();
   const { userId, nickname } = useSelector(selectUser);
-  // console.log("38 here", userId, nickname);
 
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [postData, setPostData] = useState(initialState);
+  const [post, setPost] = useState(initialState);
   //  for MediaLibrary acces gallery or camera and safe photo
   const [hasCameraPermission, setHasCameraPermission] = useState();
-  const [hasMediaPermission, setHasMediaPermission] = useState();
   const [photoURI, setPhotoURI] = useState(null);
   // maybe for location error
   const [errorMsg, setErrorMsg] = useState(null);
@@ -51,7 +51,6 @@ export const CreatePostsScreen = ({ navigation }) => {
       const mediaLibraryPermission =
         await MediaLibrary.requestPermissionsAsync();
       setHasCameraPermission(cameraPermission.status === "granted");
-      setHasMediaPermission(mediaLibraryPermission.status === "granted");
     })();
   }, []);
 
@@ -67,6 +66,19 @@ export const CreatePostsScreen = ({ navigation }) => {
       }
     })();
   }, []);
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setPhotoURI(result.assets[0].uri);
+    }
+  };
 
   if (hasCameraPermission === undefined) {
     return <Text>Requesting permissions...</Text>;
@@ -94,30 +106,34 @@ export const CreatePostsScreen = ({ navigation }) => {
 
   // submitForm
   const handleSubmit = async () => {
-    const { title, region } = postData;
+    const { title, region } = post;
     if (!photoURI || !title || !region) {
       alert("all fields are required");
       return;
     }
 
     try {
-      const newPhotoURI = await uploadImage(photoURI);
+      const newPhotoURI = await uploadImage(photoURI, "images");
       const location = await getUserLocation();
 
       console.log("after photo and location");
       const newPost = {
-        ...postData,
-        userId: userId,
-        userName: nickname,
+        title: title.trim(),
+        region: region.trim(),
         photoURI: newPhotoURI,
         location: location,
+        userId: userId,
+        userName: nickname,
       };
       // call postManager fn
       await uploadPostToDb(newPost);
-      navigation.navigate("DefaultPosts");
     } catch (error) {
       console.log("error on created", error.message);
     }
+
+    setPost(initialState);
+    setPhotoURI(null);
+    navigation.navigate("DefaultPosts");
   };
 
   const keyboardHide = () => {
@@ -130,11 +146,7 @@ export const CreatePostsScreen = ({ navigation }) => {
       <TouchableWithoutFeedback onPress={keyboardHide} style={{ flex: 1 }}>
         <View style={styles.container}>
           <View style={{ marginTop: isShowKeyboard ? -32 : 32 }}>
-            <Camera
-              style={styles.camera}
-              ref={cameraRef}
-              // type={type}
-            >
+            <Camera style={styles.camera} ref={cameraRef}>
               <View style={styles.photoWrap}>
                 {!photoURI && (
                   <TouchableOpacity
@@ -146,29 +158,34 @@ export const CreatePostsScreen = ({ navigation }) => {
                   </TouchableOpacity>
                 )}
                 {photoURI && (
-                  <>
-                    <Image style={styles.preview} source={{ uri: photoURI }} />
-                    {/* <TouchableOpacity
-                      style={{
-                        width: 30,
-                        height: 30,
-                        backgroundColor: "#757575",
-                      }}
-                      onPress={() => setPhoto(null)}
-                    >
-                      <Text>Delete photo</Text>
-                    </TouchableOpacity> */}
-                  </>
+                  <Image style={styles.preview} source={{ uri: photoURI }} />
                 )}
               </View>
             </Camera>
-            <Text style={styles.helpText}>Завантажте фото</Text>
+            <View style={styles.buttonsWrap}>
+              <TouchableOpacity
+                onPress={pickImage}
+                activeOpacity={0.7}
+                style={styles.uploadPhotoBtn}
+              >
+                <Text style={styles.uploadBtnText}>Завантажте фото</Text>
+              </TouchableOpacity>
+              {photoURI && (
+                <TouchableOpacity
+                  onPress={() => setPhotoURI(null)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.uploadBtnText}>Видалити</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+
             <PostInput
               placeholder="Назва..."
               name="title"
-              value={postData.title}
+              value={post.title}
               onChangeText={(value) =>
-                setPostData((prev) => ({ ...prev, title: value }))
+                setPost((prev) => ({ ...prev, title: value }))
               }
               onFocus={() => setIsShowKeyboard(true)}
               marginStyle={{ marginBottom: 16 }}
@@ -176,21 +193,26 @@ export const CreatePostsScreen = ({ navigation }) => {
             <PostInput
               placeholder="Місцевість..."
               name="location"
-              value={postData.region}
+              value={post.region}
               onChangeText={(value) =>
-                setPostData((prev) => ({ ...prev, region: value }))
+                setPost((prev) => ({ ...prev, region: value }))
               }
               onFocus={() => setIsShowKeyboard(true)}
               marginStyle={{ marginBottom: isShowKeyboard ? 32 : 0 }}
             />
             <SubmitButton onPress={handleSubmit}>Опублікувати</SubmitButton>
           </View>
-          <View style={styles.footer}>
+          <View
+            style={{
+              ...styles.footer,
+              bottom: isShowKeyboard ? "-100%" : 15,
+            }}
+          >
             <TouchableOpacity
               style={styles.trashButton}
               activeOpacity={0.7}
               onPress={() => {
-                setPostData(initialState);
+                setPost(initialState);
                 setPhotoURI(null);
               }}
             >
@@ -232,10 +254,18 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     backgroundColor: "#fff",
   },
-  helpText: {
+  buttonsWrap: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 32,
+  },
+  uploadPhotoBtn: {
+    width: 145,
+  },
+  uploadBtnText: {
     fontSize: 16,
     color: "#BDBDBD",
-    marginBottom: 32,
   },
   preview: {
     alignSelf: "stretch",
@@ -257,7 +287,6 @@ const styles = StyleSheet.create({
   },
   footer: {
     position: "absolute",
-    bottom: 15,
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
