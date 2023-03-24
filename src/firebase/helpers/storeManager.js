@@ -15,9 +15,9 @@ export const uploadImage = async (photoURI, path) => {
       .then(() => {
         return;
       })
-      .catch((e) => {
-        alert("Oops, something went wrong");
-        console.log("error in upload file", e.message)
+      .catch((error) => {
+        alert("Something went wrong");
+        console.log(error.message)
       });
 
     const uploadedPhoto = await getDownloadURL(imageRef);

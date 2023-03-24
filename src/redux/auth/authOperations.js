@@ -26,14 +26,13 @@ export const authSignUpUser = ({email, password, login, avatar}) => async (dispa
             email: email,
             avatar: photoURL,
         }))
-        // console.log("user in Reg:", user)
+
     } catch (error) {
         if (error.message.includes('auth/email-already-in-use')) {
             alert('user already exists');
             return;
         }
-        console.log('error:', error.message)
-        alert(error.message)
+        console.log(error.message)
     }
 }
 

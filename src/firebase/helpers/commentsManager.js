@@ -1,15 +1,17 @@
-import { addDoc, collection, getDocs, doc } from "firebase/firestore";
+import { addDoc, collection, getDocs, doc, updateDoc } from "firebase/firestore";
 import { db } from "../config";
 
-export const addCommentToPost = async (comments, postId) => {
+export const addCommentToPost = async (comments, postId, allComments) => {
     if (!comments) return;
 
     try {
         const postRef = await doc(collection(db, "posts"), postId);
-        await addDoc(collection(postRef, 'comments'), comments);
+        const commentsPromise = addDoc(collection(postRef, 'comments'), comments);
+        const commentsCountPromise = updateDoc(postRef, { "comments": allComments.length + 1 });
+        await Promise.all([commentsPromise, commentsCountPromise])
     } catch (error) {
         alert("Something went wrong")
-      console.log("!!!!coments", error.message);
+        console.log(error.message);
     }
 }
 
@@ -25,6 +27,6 @@ export const getAllComments = async (postId) => {
 
         return array;
     } catch (error) {
-        console.log("err in getComments: ", error.message)
+        console.log(error.message)
     }
 }

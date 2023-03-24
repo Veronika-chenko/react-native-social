@@ -116,7 +116,6 @@ export const CreatePostsScreen = ({ navigation }) => {
       const newPhotoURI = await uploadImage(photoURI, "images");
       const location = await getUserLocation();
 
-      console.log("after photo and location");
       const newPost = {
         title: title.trim(),
         region: region.trim(),
@@ -124,11 +123,12 @@ export const CreatePostsScreen = ({ navigation }) => {
         location: location,
         userId: userId,
         userName: nickname,
+        comments: 0,
       };
-      // call postManager fn
+
       await uploadPostToDb(newPost);
     } catch (error) {
-      console.log("error on created", error.message);
+      console.log(error.message);
     }
 
     setPost(initialState);

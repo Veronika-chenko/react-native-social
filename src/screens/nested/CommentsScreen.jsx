@@ -62,7 +62,6 @@ export const CommentsScreen = ({ route }) => {
 
   const handleSubmit = async () => {
     keyboardHide();
-
     if (!userComment) return;
 
     const newComment = {
@@ -78,7 +77,7 @@ export const CommentsScreen = ({ route }) => {
 
     setUserComment("");
 
-    await addCommentToPost(newComment, postId);
+    await addCommentToPost(newComment, postId, allComments);
   };
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>

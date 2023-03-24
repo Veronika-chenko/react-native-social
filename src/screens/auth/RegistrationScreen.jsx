@@ -41,7 +41,6 @@ export const RegistrationScreen = ({ navigation }) => {
     "Roboto-Medium": require("../../../assets/fonts/Roboto/Roboto-Medium.ttf"),
     "Roboto-Regular": require("../../../assets/fonts/Roboto/Roboto-Regular.ttf"),
   });
-
   const dispatch = useDispatch();
 
   const onLayoutRootView = useCallback(async () => {
@@ -76,7 +75,6 @@ export const RegistrationScreen = ({ navigation }) => {
   };
 
   const passAvatar = async (avatarURI) => {
-    console.log("avatarURI:", avatarURI);
     const storedAvatar = await uploadImage(avatarURI, "avatars");
     setAvatar(storedAvatar);
   };

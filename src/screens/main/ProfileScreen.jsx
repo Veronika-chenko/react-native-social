@@ -56,7 +56,7 @@ export const ProfileScreen = ({ navigation }) => {
       });
       return unsubscribe;
     } catch (error) {
-      console.log("error in get post on Profile", error.message);
+      console.log(error.message);
       return () => {};
     }
   };
